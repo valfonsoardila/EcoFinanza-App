@@ -5,4 +5,5 @@ Aplicacion hecha en flutter para hacer seguimiento de formulas ecnomicas financi
 
 ## `Logo`
 
-![icon](https://github.com/VictorArdila/EcoFinanza-App/assets/89551043/2af3be44-f56b-410e-b454-a23df9addab7)
+![icon](https://github.com/VictorArdila/EcoFinanza-App/assets/89551043/7e8a73ce-acf0-4258-8c89-1fb1c4a66f26)
+
