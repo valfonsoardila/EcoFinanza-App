@@ -10,6 +10,15 @@ class SettingView extends StatefulWidget {
 class _SettingViewState extends State<SettingView> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/imgs/bg.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+    );
   }
 }
