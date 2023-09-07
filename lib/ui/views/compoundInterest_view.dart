@@ -2,8 +2,7 @@ import 'package:ecofinanza_app/ui/models/compoundInterest_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'dart:convert';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CompoundInterestView extends StatefulWidget {
   const CompoundInterestView({super.key});
@@ -13,6 +12,8 @@ class CompoundInterestView extends StatefulWidget {
 }
 
 class _CompoundInterestViewState extends State<CompoundInterestView> {
+  late List<dynamic> data;
+  late TooltipBehavior _tooltip;
   List<Color> gradientColors = [
     Color(0xff23b6e6),
     Color(0xff02d39a),
@@ -71,6 +72,27 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    data = [
+      _ChartData('Ene', 0),
+      _ChartData('Feb', 0),
+      _ChartData('Mar', 0),
+      _ChartData('Abr', 0),
+      _ChartData('May', 0),
+      _ChartData('Jun', 0),
+      _ChartData('Jul', 0),
+      _ChartData('Ago', 0),
+      _ChartData('Sep', 0),
+      _ChartData('Oct', 0),
+      _ChartData('Nov', 0),
+      _ChartData('Dic', 0),
+    ];
+    _tooltip = TooltipBehavior(enable: true);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
@@ -95,11 +117,22 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                 ),
               ),
               Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: Stack(children: []),
-              ),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      primaryYAxis:
+                          NumericAxis(minimum: 0, maximum: 40, interval: 10),
+                      tooltipBehavior: _tooltip,
+                      series: <ChartSeries<dynamic, String>>[
+                        AreaSeries<dynamic, String>(
+                            dataSource: data,
+                            xValueMapper: (dynamic data, _) => data.x,
+                            yValueMapper: (dynamic data, _) => data.y,
+                            name: 'Gold',
+                            color: Color.fromRGBO(8, 142, 255, 1))
+                      ])),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -475,4 +508,11 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
       ),
     );
   }
+}
+
+class _ChartData {
+  _ChartData(this.x, this.y);
+
+  final String x;
+  final double y;
 }

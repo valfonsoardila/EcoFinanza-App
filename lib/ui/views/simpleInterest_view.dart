@@ -2,8 +2,7 @@ import 'package:ecofinanza_app/ui/models/simpleInterest_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'dart:convert';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SimpleInterestView extends StatefulWidget {
   const SimpleInterestView({super.key});
@@ -13,6 +12,8 @@ class SimpleInterestView extends StatefulWidget {
 }
 
 class _SimpleInterestViewState extends State<SimpleInterestView> {
+  late List<dynamic> data;
+  late TooltipBehavior _tooltip;
   List<Color> gradientColors = [
     Color(0xff23b6e6),
     Color(0xff02d39a),
@@ -157,6 +158,22 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   void initState() {
     super.initState();
     ins = SimpleInterestModel(p: 0, f: 0, i: 0, n: 0, iTiempo: 1, nTiempo: 1);
+    data = [
+      _ChartData('Ene', 0),
+      _ChartData('Feb', 0),
+      _ChartData('Mar', 0),
+      _ChartData('Abr', 0),
+      _ChartData('May', 0),
+      _ChartData('Jun', 0),
+      _ChartData('Jul', 0),
+      _ChartData('Ago', 0),
+      _ChartData('Sep', 0),
+      _ChartData('Oct', 0),
+      _ChartData('Nov', 0),
+      _ChartData('Dic', 0),
+    ];
+    _tooltip = TooltipBehavior(enable: true);
+    super.initState();
   }
 
   @override
@@ -184,385 +201,22 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                 ),
               ),
               Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.3,
-                child: Stack(children: [
-                  LineChart(
-                    LineChartData(
-                      // read about it in the LineChartData section
-                      backgroundColor: Colors.transparent,
-                      showingTooltipIndicators: [],
-                      clipData: FlClipData.all(),
-                      borderData: FlBorderData(
-                          show: true,
-                          border: Border(
-                              bottom: BorderSide(color: Colors.black),
-                              left: BorderSide(color: Colors.black),
-                              right: BorderSide(color: Colors.transparent),
-                              top: BorderSide(color: Colors.transparent))),
-                      baselineX: 0,
-                      baselineY: 0,
-                      maxX: 12,
-                      maxY: 12,
-                      minX: 0,
-                      minY: 0,
-                      lineBarsData: [
-                        LineChartBarData(
-                          show: true,
-                          shadow: Shadow(blurRadius: 2, color: Colors.purple),
-                          spots: [
-                            FlSpot(0, 0),
-                            FlSpot(5, 5),
-                            FlSpot(7, 6),
-                            FlSpot(8, 4),
-                          ],
-                          isCurved: true,
-                          curveSmoothness: 0.5,
-                          barWidth: 3,
-                          showingIndicators: [0, 1, 2, 3],
-                          dashArray: [2, 2],
-                          aboveBarData: BarAreaData(
-                            show: true,
-                            cutOffY: 0,
-                            applyCutOffY: true,
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: gradientColors
-                                  .map((color) => color.withOpacity(0.3))
-                                  .toList(),
-                              transform: GradientRotation(90),
-                            ),
-                            spotsLine: BarAreaSpotsLine(
-                              show: true,
-                              flLineStyle: FlLine(
-                                color: Colors.purple,
-                                strokeWidth: 1,
-                              ),
-                              checkToShowSpotLine: (spot) {
-                                if (spot.x == 0 ||
-                                    spot.x == 5 ||
-                                    spot.x == 7 ||
-                                    spot.x == 8) {
-                                  return true;
-                                } else {
-                                  return false;
-                                }
-                              },
-                            ),
-                          ),
-                          belowBarData: BarAreaData(
-                            show: true,
-                            cutOffY: 0,
-                            applyCutOffY: true,
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: gradientColors
-                                  .map((color) => color.withOpacity(0.3))
-                                  .toList(),
-                              transform: GradientRotation(90),
-                            ),
-                            spotsLine: BarAreaSpotsLine(
-                              show: true,
-                              flLineStyle: FlLine(
-                                color: Colors.purple,
-                                strokeWidth: 1,
-                              ),
-                              checkToShowSpotLine: (spot) {
-                                if (spot.x == 0 ||
-                                    spot.x == 5 ||
-                                    spot.x == 7 ||
-                                    spot.x == 8) {
-                                  return true;
-                                } else {
-                                  return false;
-                                }
-                              },
-                            ),
-                          ),
-                          dotData: FlDotData(
-                            show: true,
-                            getDotPainter: (spot, percent, barData, index) {
-                              return FlDotCirclePainter(
-                                radius: 5,
-                                color: Colors.purple,
-                                strokeWidth: 1,
-                                strokeColor: Colors.purple,
-                              );
-                            },
-                          ),
-                          lineChartStepData: LineChartStepData(
-                            stepDirection: 12,
-                          ),
-                          preventCurveOverShooting: true,
-                          preventCurveOvershootingThreshold: 1,
-                        )
-                      ],
-                      lineTouchData: LineTouchData(
-                        enabled: true,
-                        touchTooltipData: LineTouchTooltipData(
-                          tooltipBgColor: Colors.purple,
-                          getTooltipItems: (touchedSpots) {
-                            return touchedSpots.map((e) {
-                              return LineTooltipItem(
-                                e.y.toString(),
-                                TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              );
-                            }).toList();
-                          },
-                        ),
-                        longPressDuration: Duration(
-                            milliseconds:
-                                500), //tiempo que se mantiene presionado para mostrar el tooltip
-                        getTouchedSpotIndicator:
-                            (LineChartBarData barData, List<int> spotIndexes) {
-                          return spotIndexes.map((spotIndex) {
-                            final FlSpot spot = barData.spots[spotIndex];
-                            if (spot.x == 0 ||
-                                spot.x == 5 ||
-                                spot.x == 7 ||
-                                spot.x == 8) {
-                              return TouchedSpotIndicatorData(
-                                FlLine(
-                                  color: Colors.purple,
-                                  strokeWidth: 2,
-                                ),
-                                FlDotData(
-                                  show: true,
-                                  getDotPainter:
-                                      (spot, percent, barData, index) {
-                                    return FlDotCirclePainter(
-                                      radius: 5,
-                                      color: Colors.purple,
-                                      strokeWidth: 1,
-                                      strokeColor: Colors.purple,
-                                    );
-                                  },
-                                ),
-                              );
-                            } else {
-                              return TouchedSpotIndicatorData(
-                                FlLine(
-                                  color: Colors.transparent,
-                                ),
-                                FlDotData(
-                                  show: false,
-                                ),
-                              );
-                            }
-                          }).toList();
-                        },
-                      ),
-                      gridData: FlGridData(
-                        show: false,
-                      ),
-                      titlesData: FlTitlesData(
-                        show: true,
-                        topTitles: AxisTitles(
-                          axisNameSize: 22,
-                          axisNameWidget: Container(
-                            child: Text(
-                              "Flujo de caja",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                          sideTitles: SideTitles(
-                            showTitles: false,
-                            interval: 1,
-                          ),
-                        ),
-                        bottomTitles: AxisTitles(
-                          axisNameSize: 18,
-                          axisNameWidget: Container(
-                            child: Text(
-                              "Meses del año",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                          drawBelowEverything: true,
-                          sideTitles: SideTitles(
-                            reservedSize: 30,
-                            interval: 1,
-                            showTitles: true,
-                            getTitlesWidget: (value, index) {
-                              // Aquí agregamos un segundo argumento 'meta'
-                              switch (value.toInt()) {
-                                case 0:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Ene",
-                                    ),
-                                  );
-                                case 1:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Feb",
-                                    ),
-                                  );
-                                case 2:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Mar",
-                                    ),
-                                  );
-                                case 3:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Abr",
-                                    ),
-                                  );
-                                case 4:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "May",
-                                    ),
-                                  );
-                                case 5:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Jun",
-                                    ),
-                                  );
-                                case 6:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Jul",
-                                    ),
-                                  );
-                                case 7:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Ago",
-                                    ),
-                                  );
-                                case 8:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Sep",
-                                    ),
-                                  );
-                                case 9:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Oct",
-                                    ),
-                                  );
-                                case 10:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Nov",
-                                    ),
-                                  );
-                                case 11:
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 5),
-                                    child: Text(
-                                      "Dic",
-                                    ),
-                                  );
-                                default:
-                                  return Text(
-                                      ""); // Devolvemos un widget vacío en caso de que no haya una coincidencia
-                              }
-                            },
-                          ),
-                        ),
-                        leftTitles: AxisTitles(
-                          axisNameSize: 18,
-                          axisNameWidget: Container(
-                            child: Text(
-                              "Ingresos",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                          drawBelowEverything: true,
-                          sideTitles: SideTitles(
-                              showTitles: true,
-                              reservedSize: 32,
-                              interval: 1,
-                              getTitlesWidget: (value, meta) {
-                                switch (value.toInt()) {
-                                  case 0:
-                                    return Text("0.5m");
-                                  case 1:
-                                    return Text("1m");
-                                  case 2:
-                                    return Text("1.5m");
-                                  case 3:
-                                    return Text("2m");
-                                  case 4:
-                                    return Text("2.5m");
-                                  case 5:
-                                    return Text("3m");
-                                  case 6:
-                                    return Text("3.5m");
-                                  case 7:
-                                    return Text("4m");
-                                  case 8:
-                                    return Text("4.5m");
-                                  case 9:
-                                    return Text("5m");
-                                  case 10:
-                                    return Text("5.5m");
-                                  case 11:
-                                    return Text("6m");
-                                  default:
-                                    return Text("");
-                                }
-                              } // Aquí agregamos un segundo argumento 'meta'
-                              ),
-                        ),
-                        rightTitles: AxisTitles(
-                          sideTitles: SideTitles(
-                            showTitles: false,
-                            interval: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 150), // Optional
-                    curve: Curves.linear, // Optional
-                  )
-                ]),
-              ),
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      primaryYAxis:
+                          NumericAxis(minimum: 0, maximum: 40, interval: 10),
+                      tooltipBehavior: _tooltip,
+                      series: <ChartSeries<dynamic, String>>[
+                        AreaSeries<dynamic, String>(
+                            dataSource: data,
+                            xValueMapper: (dynamic data, _) => data.x,
+                            yValueMapper: (dynamic data, _) => data.y,
+                            name: 'Gold',
+                            color: Color.fromRGBO(8, 142, 255, 1))
+                      ])),
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.5,
@@ -938,4 +592,11 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
       ),
     );
   }
+}
+
+class _ChartData {
+  _ChartData(this.x, this.y);
+
+  final String x;
+  final double y;
 }
