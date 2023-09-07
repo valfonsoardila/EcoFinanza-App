@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:ecofinanza_app/ui/views/compoundInterest_view.dart';
 import 'package:ecofinanza_app/ui/views/settings_view.dart';
 import 'package:ecofinanza_app/ui/views/simpleInterest_view.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ class NavegationScreen extends StatefulWidget {
 class _NavegationScreenState extends State<NavegationScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     SimpleInterestView(),
+    CompoundInterestView(),
     SettingView(),
   ];
 
@@ -65,6 +66,10 @@ class _NavegationScreenState extends State<NavegationScreen> {
                   Tab(
                     icon: Icon(Icons.calculate),
                     text: 'Interes Simple',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.calculate_outlined),
+                    text: 'Interes Compuesto',
                   ),
                   Tab(
                     icon: Icon(Icons.settings),
