@@ -35,6 +35,7 @@ class CompoundInterestModel {
   }
 
   void calcularI() {
+    //formula para calcular el interes
     i = pow(f / p, 1 / n) - 1;
     todecimal(1);
     //print(i);
@@ -42,23 +43,27 @@ class CompoundInterestModel {
 
   void calcularN() {
     todecimal(0);
+    //formula para calcular el periodo
     n = log(f / p) / log(1 + i);
     todecimal(1);
   }
 
   void calcularF() {
     todecimal(0);
+    //formula para calcular el monto final
     f = p * pow(1 + i, n);
     todecimal(1);
   }
 
   void calcularP() {
     todecimal(0);
+    //formula para calcular el monto inicial
     p = f / pow(1 + i, n);
     todecimal(1);
   }
 
   void calcularK() {
+    //formula para calcular el interes compuesto
     k = f - p;
   }
 

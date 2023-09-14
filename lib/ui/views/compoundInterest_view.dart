@@ -14,12 +14,9 @@ class CompoundInterestView extends StatefulWidget {
 class _CompoundInterestViewState extends State<CompoundInterestView> {
   late List<dynamic> data;
   late TooltipBehavior _tooltip;
-  List<Color> gradientColors = [
-    Color(0xff23b6e6),
-    Color(0xff02d39a),
-  ];
+  List<Color> gradientColors = [Colors.blue, Colors.purple];
   //Instancia de la clase SimpleInterestModel
-  late CompoundInterestModel ins;
+  late CompoundInterestModel inc;
   //Controladores de los campos de texto
   TextEditingController p = TextEditingController();
   TextEditingController f = TextEditingController();
@@ -38,6 +35,32 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   double interestValue = 0;
   double nInterest = 0;
   String nCuota = "";
+  double min = 0;
+  double max = 1000;
+  List<double> cuotas = [];
+  List<String> Meses = [
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic'
+  ];
+  List<String> dias = [
+    'Lunes',
+    'Martes',
+    'Miercoles',
+    'Jueves',
+    'Viernes',
+    'Sabado',
+    'Domingo'
+  ];
   //Lista de tiempos
   var Tiempos = <String>[
     'Diario',
@@ -71,9 +94,119 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
     }
   }
 
+  calcularInteresCompuesto() {
+    validar();
+    inc.p = double.parse(p.text.replaceAll('.', '').replaceAll(',', '.'));
+    inc.f = double.parse(f.text.replaceAll('.', '').replaceAll(',', '.'));
+    inc.n = double.parse(n.text);
+    inc.i = double.parse(i.text);
+    inc.criterio();
+    p.text = FormatoMoneda(inc.p);
+    f.text = FormatoMoneda(inc.f);
+    n.text = textoFormato(inc.n);
+    i.text = textoFormato(inc.i);
+    setState(() {
+      double k = inc.f - inc.p;
+      incg4 = FormatoMoneda(k);
+    });
+  }
+
+  validar() {
+    if (p.text == "") {
+      p.text = "0";
+      setState(() {
+        incg1 = "Incognita";
+        incg2 = "";
+        incg3 = "";
+        incg4 = "";
+      });
+    } else if (f.text == "") {
+      f.text = "0";
+      setState(() {
+        incg1 = "";
+        incg2 = "Incognita";
+        incg3 = "";
+        incg4 = "";
+      });
+    } else if (n.text == "") {
+      n.text = "0";
+      setState(() {
+        incg3 = "Incognita";
+        incg2 = "";
+        incg1 = "";
+        incg4 = "";
+      });
+    } else if (i.text == "") {
+      i.text = "0";
+      setState(() {
+        incg4 = "Incognita";
+        incg2 = "";
+        incg3 = "";
+        incg1 = "";
+      });
+    } else {
+      //alerta
+    }
+  }
+
+  nuevo() {
+    cuotas.clear();
+    p.clear();
+    f.clear();
+    n.clear();
+    i.clear();
+    TiempoSeleccionadoDropd1 = "Diario";
+    TiempoSeleccionadoDropd2 = "Diario";
+    incg1 = "";
+    incg2 = "";
+    incg3 = "";
+    incg4 = "";
+    data = [
+      _ChartData('Ene', 0),
+      _ChartData('Feb', 0),
+      _ChartData('Mar', 0),
+      _ChartData('Abr', 0),
+      _ChartData('May', 0),
+      _ChartData('Jun', 0),
+      _ChartData('Jul', 0),
+      _ChartData('Ago', 0),
+      _ChartData('Sep', 0),
+      _ChartData('Oct', 0),
+      _ChartData('Nov', 0),
+      _ChartData('Dic', 0),
+    ];
+    _tooltip = TooltipBehavior(enable: true);
+  }
+
+  calcularCuotas() {
+    cuotas.clear();
+    nCuota = inc.n.toString();
+    interestValue = inc.f - inc.p;
+    nInterest = interestValue / inc.n;
+    for (int i = 0; i < inc.n; i++) {
+      if (i == 0) {
+        cuotas.add(inc.p * -1);
+      } else {
+        cuotas.add(inc.p + (nInterest * i));
+      }
+    }
+    min = cuotas[0];
+    max = cuotas[cuotas.length - 1];
+    print(cuotas);
+  }
+
+  graficar() {
+    data.clear();
+    for (int i = 0; i < cuotas.length; i++) {
+      data.add(_ChartData(Meses[i], cuotas[i]));
+    }
+    print(data);
+  }
+
   @override
   void initState() {
     super.initState();
+    inc = CompoundInterestModel(p: 0, f: 0, i: 0, n: 0, iTiempo: 1, nTiempo: 1);
     data = [
       _ChartData('Ene', 0),
       _ChartData('Feb', 0),
@@ -119,19 +252,39 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
               Container(
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   child: SfCartesianChart(
-                      primaryXAxis: CategoryAxis(),
-                      primaryYAxis:
-                          NumericAxis(minimum: 0, maximum: 40, interval: 10),
-                      tooltipBehavior: _tooltip,
+                      plotAreaBorderWidth: 0,
+                      title: ChartTitle(text: 'Flujo de caja: $incg4'),
+                      legend: Legend(isVisible: false),
+                      primaryXAxis: CategoryAxis(
+                        labelPlacement: LabelPlacement.onTicks,
+                        majorGridLines: MajorGridLines(width: 0),
+                        name: 'Meses',
+                        title: AxisTitle(text: 'Meses'),
+                        axisLine: AxisLine(width: 0),
+                        arrangeByIndex: true,
+                        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+                      ),
+                      primaryYAxis: NumericAxis(
+                          name: 'Valor',
+                          title: AxisTitle(text: 'Valor'),
+                          minimum: min,
+                          maximum: max,
+                          interval: max / 10),
                       series: <ChartSeries<dynamic, String>>[
                         AreaSeries<dynamic, String>(
-                            dataSource: data,
-                            xValueMapper: (dynamic data, _) => data.x,
-                            yValueMapper: (dynamic data, _) => data.y,
-                            name: 'Gold',
-                            color: Color.fromRGBO(8, 142, 255, 1))
+                          dataSource: data,
+                          xValueMapper: (dynamic data, _) => data.x,
+                          yValueMapper: (dynamic data, _) => data.y,
+                          name: 'Gold',
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: gradientColors,
+                          ),
+                          color: Color.fromRGBO(255, 255, 255, 0.3),
+                        )
                       ])),
               Container(
                 width: MediaQuery.of(context).size.width,
@@ -173,6 +326,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                                 helperText: incg1,
                                 helperStyle: TextStyle(
                                   color: Colors.red.shade900,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -207,6 +361,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                                 helperText: incg2,
                                 helperStyle: TextStyle(
                                   color: Colors.red.shade900,
+                                  fontWeight: FontWeight.bold,
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -242,6 +397,10 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 helperText: incg3,
+                                helperStyle: TextStyle(
+                                  color: Colors.red.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 filled:
                                     true, // Esta propiedad indica que el fondo debe estar lleno.
                                 fillColor: Color.fromARGB(255, 248, 246,
@@ -343,6 +502,15 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 helperText: "Valor interes: $incg4",
+                                helperStyle: TextStyle(
+                                  color: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: gradientColors,
+                                  ).colors[1],
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                                 filled:
                                     true, // Esta propiedad indica que el fondo debe estar lleno.
                                 fillColor: Color.fromARGB(255, 248, 246,
@@ -441,15 +609,16 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             child: ElevatedButton(
                               onPressed: () {
-                                // setState(() {
-                                //   _isSwitched = !_isSwitched;
-                                //   if (_isSwitched != false) {
-                                //     calcularInteresSimple();
-                                //     graficar();
-                                //   } else {
-                                //     nuevo();
-                                //   }
-                                // });
+                                setState(() {
+                                  _isSwitched = !_isSwitched;
+                                  if (_isSwitched != false) {
+                                    calcularInteresCompuesto();
+                                    calcularCuotas();
+                                    graficar();
+                                  } else {
+                                    nuevo();
+                                  }
+                                });
                               },
                               child: _isSwitched != false
                                   ? Text("Nuevo")
@@ -474,8 +643,9 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                                   padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      // calcularInteresSimple();
-                                      // graficar();
+                                      calcularInteresCompuesto();
+                                      calcularCuotas();
+                                      graficar();
                                     },
                                     child: Text("Recalcular"),
                                     style: ButtonStyle(
