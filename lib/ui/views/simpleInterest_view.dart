@@ -18,12 +18,18 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   //Instancia de la clase SimpleInterestModel
   late SimpleInterestModel ins;
   //Controladores de los campos de texto
+  TextEditingController diasController = TextEditingController();
+  TextEditingController mesesController = TextEditingController();
+  TextEditingController anosController = TextEditingController();
   TextEditingController p = TextEditingController();
   TextEditingController f = TextEditingController();
   TextEditingController i = TextEditingController();
   TextEditingController n = TextEditingController();
   //Variables de control
   bool _isSwitched = false;
+  bool isExpanded =
+      false; // Variable para controlar si el ExpansionTile está expandido o no
+  double _height = 60; // Variable para controlar el alto del Container
   String TiempoSeleccionadoDropd1 = 'Diario';
   String TiempoSeleccionadoDropd2 = 'Diario';
   int indexSelected1 = 0;
@@ -38,6 +44,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   double min = 0;
   double max = 1000;
   List<double> cuotas = [];
+  int diasTotales = 0;
   List<String> Meses = [
     'Ene',
     'Feb',
@@ -203,6 +210,14 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     print(data);
   }
 
+  convertirADias() {
+    var dias = int.parse(diasController.text);
+    var meses = int.parse(mesesController.text);
+    var anos = int.parse(anosController.text);
+    diasTotales = (dias + (meses * 30) + (anos * 365));
+    n.text = diasTotales.toString();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -222,6 +237,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
       _ChartData('Dic', 0),
     ];
     _tooltip = TooltipBehavior(enable: true);
+    diasController.text = "0";
+    mesesController.text = "0";
+    anosController.text = "0";
     super.initState();
   }
 
@@ -230,21 +248,21 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/imgs/bg.jpg"),
               fit: BoxFit.cover,
             ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Text(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: const Text(
                   "Interes Simple",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -252,16 +270,16 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
               Container(
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.3,
                   child: SfCartesianChart(
                       plotAreaBorderWidth: 0,
                       title: ChartTitle(text: 'Flujo de caja: $incg4'),
                       primaryXAxis: CategoryAxis(
                         labelPlacement: LabelPlacement.onTicks,
-                        majorGridLines: MajorGridLines(width: 0),
+                        majorGridLines: const MajorGridLines(width: 0),
                         name: 'Meses',
                         title: AxisTitle(text: 'Meses'),
-                        axisLine: AxisLine(width: 0),
+                        axisLine: const AxisLine(width: 0),
                         arrangeByIndex: true,
                         labelIntersectAction: AxisLabelIntersectAction.rotate45,
                       ),
@@ -283,18 +301,18 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                             end: Alignment.bottomCenter,
                             colors: gradientColors,
                           ),
-                          color: Color.fromRGBO(255, 255, 255, 0.3),
+                          color: const Color.fromRGBO(255, 255, 255, 0.3),
                         )
                       ])),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.62,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: const Row(
                         children: [
                           Text(
                             "Datos",
@@ -307,7 +325,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -330,7 +348,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 1.0,
                                   ),
@@ -338,9 +356,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(Icons.attach_money),
+                                prefixIcon: const Icon(Icons.attach_money),
                                 labelText: 'Valor Presente',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
@@ -365,7 +383,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 1.0,
                                   ),
@@ -373,9 +391,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(Icons.attach_money),
+                                prefixIcon: const Icon(Icons.attach_money),
                                 labelText: 'Valor Futuro',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
@@ -385,118 +403,209 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.44,
-                            padding: EdgeInsets.only(top: 20),
-                            child: TextField(
-                              controller: n,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                helperText: incg3,
-                                helperStyle: TextStyle(
-                                  color: Colors.red.shade900,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                filled:
-                                    true, // Esta propiedad indica que el fondo debe estar lleno.
-                                fillColor: Color.fromARGB(255, 248, 246,
-                                    247), // Establece el color de fondo en blanco.
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                prefixIcon: Icon(Icons.calendar_today),
-                                labelText: 'Periodo',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.44,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 248, 246, 247),
-                              border: Border.all(
-                                color: Colors.grey
-                                    .shade500, // Puedes cambiar el color del borde aquí
-                                width:
-                                    1.0, // Puedes ajustar el grosor del borde aquí
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Puedes ajustar la esquina redondeada aquí
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Icon(Icons.timer),
-                                ),
-                                Expanded(
-                                  child: DropdownButton(
-                                    hint: Text(
-                                      'Tiempo',
-                                      style: TextStyle(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(
+                          color: Colors.grey.shade700,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListView.builder(
+                          itemCount: 1,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: _height,
+                              child: ExpansionTile(
+                                leading: Icon(Icons.calendar_today),
+                                childrenPadding: EdgeInsets.all(10),
+                                title: Text(diasTotales > 0
+                                    ? "Periodo: $diasTotales dias"
+                                    : "Selecione el periodo"),
+                                onExpansionChanged: (bool expanding) =>
+                                    setState(() => _height = expanding
+                                        ? 255
+                                        : 60), // Changes the height of the container
+                                children: [
+                                  TextFormField(
+                                    controller: anosController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Años',
+                                      labelStyle: TextStyle(
                                         color: Colors.black,
                                       ),
                                     ),
-                                    dropdownColor:
-                                        Colors.white.withOpacity(0.9),
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black,
-                                    ),
-                                    iconSize: 36,
-                                    isExpanded: true,
-                                    underline: SizedBox(),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                    value: TiempoSeleccionadoDropd1,
-                                    onChanged: (newValue) {
+                                    onChanged: (value) {
                                       setState(() {
-                                        TiempoSeleccionadoDropd1 =
-                                            newValue.toString();
-                                        indexSelected1 = Tiempos.indexOf(
-                                            newValue.toString());
-                                        print(
-                                            indexSelected1); // Actualiza el valor seleccionado
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
                                       });
                                     },
-                                    items: Tiempos.map((valueItem) {
-                                      return DropdownMenuItem(
-                                        value: valueItem,
-                                        child: Text(valueItem),
-                                      );
-                                    }).toList(),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                  TextFormField(
+                                    controller: mesesController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Meses',
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  TextFormField(
+                                    controller: diasController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Dias',
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                     ),
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(vertical: 5),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Container(
+                    //         width: MediaQuery.of(context).size.width * 0.44,
+                    //         padding: EdgeInsets.only(top: 20),
+                    //         child: TextField(
+                    //           controller: n,
+                    //           keyboardType: TextInputType.number,
+                    //           decoration: InputDecoration(
+                    //             helperText: incg3,
+                    //             helperStyle: TextStyle(
+                    //               color: Colors.red.shade900,
+                    //               fontWeight: FontWeight.bold,
+                    //             ),
+                    //             filled:
+                    //                 true, // Esta propiedad indica que el fondo debe estar lleno.
+                    //             fillColor: Color.fromARGB(255, 248, 246,
+                    //                 247), // Establece el color de fondo en blanco.
+                    //             focusedBorder: OutlineInputBorder(
+                    //               borderRadius: BorderRadius.circular(10),
+                    //               borderSide: BorderSide(
+                    //                 color: Colors.black,
+                    //                 width: 1.0,
+                    //               ),
+                    //             ),
+                    //             border: OutlineInputBorder(
+                    //               borderRadius: BorderRadius.circular(10),
+                    //             ),
+                    //             prefixIcon: Icon(Icons.calendar_today),
+                    //             labelText: 'Periodo',
+                    //             labelStyle: TextStyle(
+                    //               color: Colors.black,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //       Container(
+                    //         width: MediaQuery.of(context).size.width * 0.44,
+                    //         height: 60,
+                    //         decoration: BoxDecoration(
+                    //           color: Color.fromARGB(255, 248, 246, 247),
+                    //           border: Border.all(
+                    //             color: Colors.grey
+                    //                 .shade500, // Puedes cambiar el color del borde aquí
+                    //             width:
+                    //                 1.0, // Puedes ajustar el grosor del borde aquí
+                    //           ),
+                    //           borderRadius: BorderRadius.circular(
+                    //               8.0), // Puedes ajustar la esquina redondeada aquí
+                    //         ),
+                    //         child: Row(
+                    //           children: [
+                    //             Padding(
+                    //               padding:
+                    //                   EdgeInsets.symmetric(horizontal: 8.0),
+                    //               child: Icon(Icons.timer),
+                    //             ),
+                    //             Expanded(
+                    //               child: DropdownButton(
+                    //                 hint: Text(
+                    //                   'Tiempo',
+                    //                   style: TextStyle(
+                    //                     color: Colors.black,
+                    //                   ),
+                    //                 ),
+                    //                 dropdownColor:
+                    //                     Colors.white.withOpacity(0.9),
+                    //                 icon: Icon(
+                    //                   Icons.arrow_drop_down,
+                    //                   color: Colors.black,
+                    //                 ),
+                    //                 iconSize: 36,
+                    //                 isExpanded: true,
+                    //                 underline: SizedBox(),
+                    //                 style: TextStyle(
+                    //                   color: Colors.black,
+                    //                 ),
+                    //                 value: TiempoSeleccionadoDropd1,
+                    //                 onChanged: (newValue) {
+                    //                   setState(() {
+                    //                     TiempoSeleccionadoDropd1 =
+                    //                         newValue.toString();
+                    //                     indexSelected1 = Tiempos.indexOf(
+                    //                         newValue.toString());
+                    //                     print(
+                    //                         indexSelected1); // Actualiza el valor seleccionado
+                    //                   });
+                    //                 },
+                    //                 items: Tiempos.map((valueItem) {
+                    //                   return DropdownMenuItem(
+                    //                     value: valueItem,
+                    //                     child: Text(valueItem),
+                    //                   );
+                    //                 }).toList(),
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 3),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width * 0.44,
-                            padding: EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 20),
                             child: TextField(
                               controller: i,
                               keyboardType: TextInputType.number,
@@ -513,11 +622,11 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 ),
                                 filled:
                                     true, // Esta propiedad indica que el fondo debe estar lleno.
-                                fillColor: Color.fromARGB(255, 248, 246,
+                                fillColor: const Color.fromARGB(255, 248, 246,
                                     247), // Establece el color de fondo en blanco.
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Colors.black,
                                     width: 1.0,
                                   ),
@@ -525,9 +634,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                prefixIcon: Icon(Icons.percent),
+                                prefixIcon: const Icon(Icons.percent),
                                 labelText: 'Interes',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
@@ -535,9 +644,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.44,
-                            height: 60,
+                            height: 54,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 248, 246,
+                              color: const Color.fromARGB(255, 248, 246,
                                   247), // Establece el color de fondo en blanco.
                               border: Border.all(
                                 color: Colors.grey
@@ -550,14 +659,14 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                             ),
                             child: Row(
                               children: [
-                                Padding(
+                                const Padding(
                                   padding:
                                       EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Icon(Icons.timer),
                                 ),
                                 Expanded(
                                   child: DropdownButton(
-                                    hint: Text(
+                                    hint: const Text(
                                       'Tiempo',
                                       style: TextStyle(
                                         color: Colors.black,
@@ -565,14 +674,14 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                     ),
                                     dropdownColor:
                                         Colors.white.withOpacity(0.9),
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.arrow_drop_down,
                                       color: Colors.black,
                                     ),
                                     iconSize: 36,
                                     isExpanded: true,
-                                    underline: SizedBox(),
-                                    style: TextStyle(
+                                    underline: const SizedBox(),
+                                    style: const TextStyle(
                                       color: Colors.black,
                                     ),
                                     value: TiempoSeleccionadoDropd2,
@@ -606,7 +715,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: ElevatedButton(
                               onPressed: () {
                                 setState(() {
@@ -621,11 +730,11 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                 });
                               },
                               child: _isSwitched != false
-                                  ? Text("Nuevo")
-                                  : Text("Calcular"),
+                                  ? const Text("Nuevo")
+                                  : const Text("Calcular"),
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(160, 40)),
+                                    const Size(160, 40)),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.deepPurple),
@@ -640,17 +749,19 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                           ),
                           _isSwitched != false
                               ? Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
                                   child: ElevatedButton(
                                     onPressed: () {
                                       calcularInteresSimple();
                                       calcularCuotas();
+                                      graficar();
                                     },
-                                    child: Text("Recalcular"),
+                                    child: const Text("Recalcular"),
                                     style: ButtonStyle(
                                       minimumSize:
                                           MaterialStateProperty.all<Size>(
-                                              Size(160, 40)),
+                                              const Size(160, 40)),
                                       backgroundColor:
                                           MaterialStateProperty.all<Color>(
                                               Colors.deepPurple),

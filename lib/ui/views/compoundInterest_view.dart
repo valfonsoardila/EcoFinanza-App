@@ -17,6 +17,9 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   List<Color> gradientColors = [Colors.blue, Colors.purple];
   //Instancia de la clase SimpleInterestModel
   late CompoundInterestModel inc;
+  TextEditingController diasController = TextEditingController();
+  TextEditingController mesesController = TextEditingController();
+  TextEditingController anosController = TextEditingController();
   //Controladores de los campos de texto
   TextEditingController p = TextEditingController();
   TextEditingController f = TextEditingController();
@@ -35,8 +38,10 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   double interestValue = 0;
   double nInterest = 0;
   String nCuota = "";
+  double _height = 60;
   double min = 0;
   double max = 1000;
+  int diasTotales = 0;
   List<double> cuotas = [];
   List<String> Meses = [
     'Ene',
@@ -203,6 +208,14 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
     print(data);
   }
 
+  convertirADias() {
+    var dias = int.parse(diasController.text);
+    var meses = int.parse(mesesController.text);
+    var anos = int.parse(anosController.text);
+    diasTotales = (dias + (meses * 30) + (anos * 365));
+    n.text = diasTotales.toString();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -222,6 +235,9 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
       _ChartData('Dic', 0),
     ];
     _tooltip = TooltipBehavior(enable: true);
+    diasController.text = "0";
+    mesesController.text = "0";
+    anosController.text = "0";
     super.initState();
   }
 
@@ -252,7 +268,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
               Container(
                   color: Colors.white,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.3,
                   child: SfCartesianChart(
                       plotAreaBorderWidth: 0,
                       title: ChartTitle(text: 'Flujo de caja: $incg4'),
@@ -288,7 +304,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                       ])),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.62,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -385,109 +401,95 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.44,
-                            padding: EdgeInsets.only(top: 20),
-                            child: TextField(
-                              controller: n,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                helperText: incg3,
-                                helperStyle: TextStyle(
-                                  color: Colors.red.shade900,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                filled:
-                                    true, // Esta propiedad indica que el fondo debe estar lleno.
-                                fillColor: Color.fromARGB(255, 248, 246,
-                                    247), // Establece el color de fondo en blanco.
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                prefixIcon: Icon(Icons.calendar_today),
-                                labelText: 'Periodo',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.44,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 248, 246, 247),
-                              border: Border.all(
-                                color: Colors.grey
-                                    .shade500, // Puedes cambiar el color del borde aquí
-                                width:
-                                    1.0, // Puedes ajustar el grosor del borde aquí
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Puedes ajustar la esquina redondeada aquí
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Icon(Icons.timer),
-                                ),
-                                Expanded(
-                                  child: DropdownButton(
-                                    hint: Text(
-                                      'Tiempo',
-                                      style: TextStyle(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        border: Border.all(
+                          color: Colors.grey.shade700,
+                          width: 1.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListView.builder(
+                          itemCount: 1,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: _height,
+                              child: ExpansionTile(
+                                leading: Icon(Icons.calendar_today),
+                                childrenPadding: EdgeInsets.all(10),
+                                title: Text(diasTotales > 0
+                                    ? "Periodo: $diasTotales dias"
+                                    : "Selecione el periodo"),
+                                onExpansionChanged: (bool expanding) =>
+                                    setState(() => _height = expanding
+                                        ? 255
+                                        : 60), // Changes the height of the container
+                                children: [
+                                  TextFormField(
+                                    controller: anosController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Años',
+                                      labelStyle: TextStyle(
                                         color: Colors.black,
                                       ),
                                     ),
-                                    dropdownColor:
-                                        Colors.white.withOpacity(0.9),
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black,
-                                    ),
-                                    iconSize: 36,
-                                    isExpanded: true,
-                                    underline: SizedBox(),
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                    value: TiempoSeleccionadoDropd1,
-                                    onChanged: (newValue) {
+                                    onChanged: (value) {
                                       setState(() {
-                                        TiempoSeleccionadoDropd1 =
-                                            newValue.toString();
-                                        indexSelected1 = Tiempos.indexOf(
-                                            newValue.toString());
-                                        print(
-                                            indexSelected1); // Actualiza el valor seleccionado
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
                                       });
                                     },
-                                    items: Tiempos.map((valueItem) {
-                                      return DropdownMenuItem(
-                                        value: valueItem,
-                                        child: Text(valueItem),
-                                      );
-                                    }).toList(),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                                  TextFormField(
+                                    controller: mesesController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Meses',
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  TextFormField(
+                                    controller: diasController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      labelText: 'Dias',
+                                      labelStyle: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value != "") {
+                                          convertirADias();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 5),
