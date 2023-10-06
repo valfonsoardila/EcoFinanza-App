@@ -107,6 +107,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     ins.f = double.parse(f.text.replaceAll('.', '').replaceAll(',', '.'));
     ins.n = double.parse(n.text);
     ins.i = double.parse(i.text);
+    ins.iTiempo = indexSelected2;
     ins.criterio();
     p.text = FormatoMoneda(ins.p);
     f.text = FormatoMoneda(ins.f);
@@ -157,11 +158,15 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   }
 
   nuevo() {
+    diasTotales = 0;
     cuotas.clear();
     p.clear();
     f.clear();
     n.clear();
     i.clear();
+    anosController.text = "0";
+    mesesController.text = "0";
+    diasController.text = "0";
     TiempoSeleccionadoDropd1 = "Diario";
     TiempoSeleccionadoDropd2 = "Diario";
     incg1 = "";
@@ -214,7 +219,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     var dias = int.parse(diasController.text);
     var meses = int.parse(mesesController.text);
     var anos = int.parse(anosController.text);
-    diasTotales = (dias + (meses * 30) + (anos * 365));
+    diasTotales = (dias + (meses * 30) + (anos * 360));
     n.text = diasTotales.toString();
   }
 
@@ -420,9 +425,16 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                               child: ExpansionTile(
                                 leading: Icon(Icons.calendar_today),
                                 childrenPadding: EdgeInsets.all(10),
-                                title: Text(diasTotales > 0
-                                    ? "Periodo: $diasTotales dias"
-                                    : "Selecione el periodo"),
+                                title: Text(
+                                    incg3 != "Incognita"
+                                        ? diasTotales > 0
+                                            ? "Periodo: $diasTotales dias"
+                                            : "Selecione el periodo"
+                                        : "Incognita ${n.text}",
+                                    style: TextStyle(
+                                        color: incg3 != "Incognita"
+                                            ? Colors.black
+                                            : Colors.red.shade900)),
                                 onExpansionChanged: (bool expanding) =>
                                     setState(() => _height = expanding
                                         ? 255
