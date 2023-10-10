@@ -38,7 +38,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   double interestValue = 0;
   double nInterest = 0;
   String nCuota = "";
-  double _height = 60;
+//  double _height = 60;
   double min = 0;
   double max = 1000;
   int diasTotales = 0;
@@ -404,103 +404,212 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                         ],
                       ),
                     ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.grey[200],
+                    //     border: Border.all(
+                    //       color: Colors.grey.shade700,
+                    //       width: 1.0,
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(10),
+                    //   ),
+                    //   child: ListView.builder(
+                    //       itemCount: 1,
+                    //       shrinkWrap: true,
+                    //       itemBuilder: (context, index) {
+                    //         return Container(
+                    //           height: _height,
+                    //           child: ExpansionTile(
+                    //             leading: Icon(Icons.calendar_today),
+                    //             childrenPadding: EdgeInsets.all(10),
+                    //             title: Text(
+                    //                 incg3 != "Incognita"
+                    //                     ? diasTotales > 0
+                    //                         ? "Periodo: $diasTotales dias"
+                    //                         : "Selecione el periodo"
+                    //                     : "Tiempo: ${n.text}",
+                    //                 style: TextStyle(color: Colors.black)),
+                    //             subtitle: Text(
+                    //               incg3,
+                    //               style: TextStyle(
+                    //                   color: incg3 != "Incognita"
+                    //                       ? Colors.black
+                    //                       : Colors.red.shade900),
+                    //             ),
+                    //             onExpansionChanged: (bool expanding) =>
+                    //                 setState(() => _height = expanding
+                    //                     ? 255
+                    //                     : 60), // Changes the height of the container
+                    //             children: [
+                    //               TextFormField(
+                    //                 controller: anosController,
+                    //                 keyboardType: TextInputType.number,
+                    //                 decoration: InputDecoration(
+                    //                   border: OutlineInputBorder(
+                    //                     borderRadius: BorderRadius.circular(10),
+                    //                   ),
+                    //                   labelText: 'Años',
+                    //                   labelStyle: TextStyle(
+                    //                     color: Colors.black,
+                    //                   ),
+                    //                 ),
+                    //                 onChanged: (value) {
+                    //                   setState(() {
+                    //                     if (value != "") {
+                    //                       convertirADias();
+                    //                     }
+                    //                   });
+                    //                 },
+                    //               ),
+                    //               TextFormField(
+                    //                 controller: mesesController,
+                    //                 keyboardType: TextInputType.number,
+                    //                 decoration: InputDecoration(
+                    //                   border: OutlineInputBorder(
+                    //                     borderRadius: BorderRadius.circular(10),
+                    //                   ),
+                    //                   labelText: 'Meses',
+                    //                   labelStyle: TextStyle(
+                    //                     color: Colors.black,
+                    //                   ),
+                    //                 ),
+                    //                 onChanged: (value) {
+                    //                   setState(() {
+                    //                     if (value != "") {
+                    //                       convertirADias();
+                    //                     }
+                    //                   });
+                    //                 },
+                    //               ),
+                    //               TextFormField(
+                    //                 controller: diasController,
+                    //                 keyboardType: TextInputType.number,
+                    //                 decoration: InputDecoration(
+                    //                   border: OutlineInputBorder(
+                    //                     borderRadius: BorderRadius.circular(10),
+                    //                   ),
+                    //                   labelText: 'Dias',
+                    //                   labelStyle: TextStyle(
+                    //                     color: Colors.black,
+                    //                   ),
+                    //                 ),
+                    //                 onChanged: (value) {
+                    //                   setState(() {
+                    //                     if (value != "") {
+                    //                       convertirADias();
+                    //                     }
+                    //                   });
+                    //                 },
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         );
+                    //       }),
+                    // ),
                     Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        border: Border.all(
-                          color: Colors.grey.shade700,
-                          width: 1.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListView.builder(
-                          itemCount: 1,
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: _height,
-                              child: ExpansionTile(
-                                leading: Icon(Icons.calendar_today),
-                                childrenPadding: EdgeInsets.all(10),
-                                title: Text(
-                                    incg3 != "Incognita"
-                                        ? diasTotales > 0
-                                            ? "Periodo: $diasTotales dias"
-                                            : "Selecione el periodo"
-                                        : "Incognita ${n.text}",
-                                    style: TextStyle(
-                                        color: incg3 != "Incognita"
-                                            ? Colors.black
-                                            : Colors.red.shade900)),
-                                onExpansionChanged: (bool expanding) =>
-                                    setState(() => _height = expanding
-                                        ? 255
-                                        : 60), // Changes the height of the container
-                                children: [
-                                  TextFormField(
-                                    controller: anosController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      labelText: 'Años',
-                                      labelStyle: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value != "") {
-                                          convertirADias();
-                                        }
-                                      });
-                                    },
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.44,
+                            padding: const EdgeInsets.only(top: 20),
+                            child: TextField(
+                              controller: n,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                helperText: incg3,
+                                helperStyle: TextStyle(
+                                  color: Colors.red.shade900,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                filled:
+                                    true, // Esta propiedad indica que el fondo debe estar lleno.
+                                fillColor: Color.fromARGB(255, 248, 246,
+                                    247), // Establece el color de fondo en blanco.
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(
+                                    color: Colors.black,
+                                    width: 1.0,
                                   ),
-                                  TextFormField(
-                                    controller: mesesController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      labelText: 'Meses',
-                                      labelStyle: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value != "") {
-                                          convertirADias();
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  TextFormField(
-                                    controller: diasController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      labelText: 'Dias',
-                                      labelStyle: TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        if (value != "") {
-                                          convertirADias();
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ],
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                prefixIcon: Icon(Icons.calendar_today),
+                                labelText: 'Periodo',
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                ),
                               ),
-                            );
-                          }),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.44,
+                            height: 54,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 248, 246, 247),
+                              border: Border.all(
+                                color: Colors.grey
+                                    .shade500, // Puedes cambiar el color del borde aquí
+                                width:
+                                    1.0, // Puedes ajustar el grosor del borde aquí
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Puedes ajustar la esquina redondeada aquí
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Icon(Icons.timer),
+                                ),
+                                Expanded(
+                                  child: DropdownButton(
+                                    hint: Text(
+                                      'Tiempo',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    dropdownColor:
+                                        Colors.white.withOpacity(0.9),
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Colors.black,
+                                    ),
+                                    iconSize: 36,
+                                    isExpanded: true,
+                                    underline: SizedBox(),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    value: TiempoSeleccionadoDropd1,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        TiempoSeleccionadoDropd1 =
+                                            newValue.toString();
+                                        indexSelected1 = Tiempos.indexOf(
+                                            newValue.toString());
+                                        print(
+                                            indexSelected1); // Actualiza el valor seleccionado
+                                      });
+                                    },
+                                    items: Tiempos.map((valueItem) {
+                                      return DropdownMenuItem(
+                                        value: valueItem,
+                                        child: Text(valueItem),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 5),

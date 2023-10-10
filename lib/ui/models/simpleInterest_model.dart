@@ -53,7 +53,7 @@ class SimpleInterestModel {
   }
 
   void calcularI() {
-    i = (1 / n) * ((f / p) - 1);
+    n > 360 ? i = (1 / n) * ((f / p) - 1) * 360 : i = (1 / n) * ((f / p) - 1);
     todecimal(1);
     //print(i);
   }
@@ -101,12 +101,12 @@ class SimpleInterestModel {
   }
 
   void conversion() {
-    i = i * matrix[iTiempo][0];
+    i = i * matrix[iTiempo][nTiempo];
     //   2          1
   }
 
   void inversion() {
-    i = i * matrix[0][iTiempo];
+    i = i * matrix[nTiempo][iTiempo];
     //   2          1
   }
 }
