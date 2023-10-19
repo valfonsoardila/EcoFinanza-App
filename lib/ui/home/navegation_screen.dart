@@ -1,5 +1,7 @@
 import 'dart:ui';
+import 'package:ecofinanza_app/ui/views/arithmeticGradient_view.dart';
 import 'package:ecofinanza_app/ui/views/compoundInterest_view.dart';
+import 'package:ecofinanza_app/ui/views/internalRateOfReturn_view.dart';
 import 'package:ecofinanza_app/ui/views/settings_view.dart';
 import 'package:ecofinanza_app/ui/views/simpleInterest_view.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,8 @@ class _NavegationScreenState extends State<NavegationScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     SimpleInterestView(),
     CompoundInterestView(),
+    ArithmeticGradientView(),
+    InternalRateOfReturnView(),
     SettingView(),
   ];
 
@@ -64,12 +68,20 @@ class _NavegationScreenState extends State<NavegationScreen> {
                 ).colors[1],
                 tabs: [
                   Tab(
-                    icon: Icon(Icons.calculate),
+                    icon: Icon(Icons.monetization_on),
                     text: 'Interes Simple',
                   ),
                   Tab(
-                    icon: Icon(Icons.calculate_outlined),
+                    icon: Icon(Icons.account_balance),
                     text: 'Interes Compuesto',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.timeline),
+                    text: 'Gradiente Aritmetico',
+                  ),
+                  Tab(
+                    icon: Icon(Icons.equalizer),
+                    text: 'Tasa Interna de Retorno',
                   ),
                   Tab(
                     icon: Icon(Icons.settings),

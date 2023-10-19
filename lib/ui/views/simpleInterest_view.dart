@@ -275,6 +275,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                   child: SfCartesianChart(
                       plotAreaBorderWidth: 0,
                       title: ChartTitle(text: 'Flujo de caja: $incg4'),
+                      legend: Legend(isVisible: true),
                       primaryXAxis: CategoryAxis(
                         labelPlacement: LabelPlacement.onTicks,
                         majorGridLines: const MajorGridLines(width: 0),

@@ -276,7 +276,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                   child: SfCartesianChart(
                       plotAreaBorderWidth: 0,
                       title: ChartTitle(text: 'Flujo de caja: $incg4'),
-                      legend: Legend(isVisible: false),
+                      legend: Legend(isVisible: true),
                       primaryXAxis: CategoryAxis(
                         labelPlacement: LabelPlacement.onTicks,
                         majorGridLines: MajorGridLines(width: 0),
