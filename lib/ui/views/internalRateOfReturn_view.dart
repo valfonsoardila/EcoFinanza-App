@@ -18,10 +18,15 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
   bool _isSwitched = false;
   String incg1 = "";
   String incg2 = "";
+  String incg3 = "";
+  String incg4 = "";
   TextEditingController inver = TextEditingController();
   TextEditingController inter = TextEditingController();
+  TextEditingController flujo = TextEditingController();
+  TextEditingController tir = TextEditingController();
+  TextEditingController van = TextEditingController();
   late InternalRateReturnModel intrr;
-  List<dynamic> flujosDeCaja = [];
+  List<double> flujosDeCaja = [];
   int indexSelected1 = 0;
   String TiempoSeleccionadoDropd1 = 'Mensual';
   int indexSelected2 = 0;
@@ -65,15 +70,98 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
     }
   }
 
+  void agregarFlujo() {
+    setState(() {
+      // Verifica si flujosDeCaja está vacío, si lo está, agrega la inversión inicial
+      if (flujosDeCaja.isEmpty) {
+        flujosDeCaja.add(
+            double.parse(inver.text.replaceAll('.', '').replaceAll(',', '.')));
+      }
+      // Luego agrega el nuevo flujo ingresado en el campo de texto
+      flujosDeCaja.add(
+          double.parse(flujo.text.replaceAll('.', '').replaceAll(',', '.')));
+      flujo.text = "";
+    });
+  }
+
   calcularTasaInternaDeRetorno() {
+    obtenerIncognita();
     intrr.inver =
         double.parse(inver.text.replaceAll('.', '').replaceAll(',', '.'));
     intrr.inter =
         double.parse(inter.text.replaceAll('.', '').replaceAll(',', '.'));
+    intrr.iTiempo = indexSelected1;
+    intrr.iTiempo = indexSelected2;
+    intrr.flujos = flujosDeCaja;
+    intrr.criterio();
+    inver.text = FormatoMoneda(intrr.inver);
+    tir.text = FormatoMoneda(intrr.tir);
+    van.text = FormatoMoneda(intrr.van);
+  }
+
+  obtenerIncognita() {
+    if (inver.text == "") {
+      inver.text = "0";
+      setState(() {
+        incg1 = "Incognita";
+        incg2 = "";
+        incg3 = "";
+        incg4 = "";
+      });
+    } else if (inter.text == "") {
+      inter.text = "0";
+      setState(() {
+        incg1 = "";
+        incg2 = "Incognita";
+        incg3 = "";
+        incg4 = "";
+      });
+    } else if (van.text == "") {
+      van.text = "0";
+      setState(() {
+        incg1 = "";
+        incg2 = "";
+        incg3 = "Incognita";
+        incg4 = "";
+      });
+    } else if (tir.text == "") {
+      tir.text = "0";
+      setState(() {
+        incg1 = "";
+        incg2 = "";
+        incg3 = "";
+        incg4 = "Incognita";
+      });
+    }
+  }
+
+  numeroDeFlujos() {
+    int n = flujosDeCaja.length;
+    return n;
+  }
+
+  nuevaOperacion() {
+    setState(() {
+      inver.text = "";
+      inter.text = "";
+      tir.text = "";
+      van.text = "";
+      flujosDeCaja.clear();
+      incg1 = "";
+      incg2 = "";
+    });
+  }
+
+  graficar() {
+    for (int i = 0; i < flujosDeCaja.length; i++) {
+      chartData!
+          .add(_StepAreaData(DateTime(2021, i + 1, 1), flujosDeCaja[i], 0));
+    }
   }
 
   @override
   void initState() {
+    intrr = InternalRateReturnModel();
     super.initState();
     //chartData  tendra valores iniciales en 0 para que no se vea vacio
     chartData = <_StepAreaData>[
@@ -176,7 +264,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       margin: const EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
-                        //controller: p,
+                        controller: inver,
                         inputFormatters: [
                           CurrencyTextInputFormatter(
                               locale: 'es-Co', symbol: '', decimalDigits: 2),
@@ -248,15 +336,15 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                               style: TextStyle(
                                 color: Colors.black,
                               ),
-                              value: TiempoSeleccionadoDropd2,
+                              value: TiempoSeleccionadoDropd1,
                               onChanged: (newValue) {
                                 setState(() {
-                                  TiempoSeleccionadoDropd2 =
+                                  TiempoSeleccionadoDropd1 =
                                       newValue.toString();
-                                  indexSelected2 =
+                                  indexSelected1 =
                                       Tiempos.indexOf(newValue.toString());
                                   print(
-                                      indexSelected2); // Actualiza el valor seleccionado
+                                      indexSelected1); // Actualiza el valor seleccionado
                                 });
                               },
                               items: Tiempos.map((valueItem) {
@@ -281,11 +369,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       margin: const EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
-                        //controller: f,
-                        inputFormatters: [
-                          CurrencyTextInputFormatter(
-                              locale: 'es-Co', symbol: '', decimalDigits: 2),
-                        ],
+                        controller: inter,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           helperText: incg2,
@@ -410,9 +494,48 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 34,
+                              child: TextField(
+                                controller: flujo,
+                                inputFormatters: [
+                                  CurrencyTextInputFormatter(
+                                      locale: 'es-Co',
+                                      symbol: '',
+                                      decimalDigits: 2),
+                                ],
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  //helperText: incg1,
+                                  helperStyle: TextStyle(
+                                    color: Colors.red.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  filled: true,
+                                  fillColor: Color.fromARGB(255, 248, 246, 247),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  prefixIcon: const Icon(Icons.attach_money),
+                                  labelText: 'Monto',
+                                  labelStyle: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
                             IconButton(
                               onPressed: () {
-                                addRow();
+                                //la primera posicion será el valor de inver
+                                agregarFlujo();
                               },
                               icon: Icon(Icons.add_box_outlined),
                               iconSize: 20,
@@ -435,48 +558,13 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black)),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        child: TextField(
-                                          //controller: p,
-                                          inputFormatters: [
-                                            CurrencyTextInputFormatter(
-                                                locale: 'es-Co',
-                                                symbol: '',
-                                                decimalDigits: 2),
-                                          ],
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            //helperText: incg1,
-                                            helperStyle: TextStyle(
-                                              color: Colors.red.shade900,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            filled: true,
-                                            fillColor: Color.fromARGB(
-                                                255, 248, 246, 247),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              borderSide: const BorderSide(
-                                                color: Colors.black,
-                                                width: 1.0,
-                                              ),
-                                            ),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            prefixIcon:
-                                                const Icon(Icons.attach_money),
-                                            labelText: 'Monto',
-                                            labelStyle: const TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
+                                      Text(
+                                        FormatoMoneda2(
+                                            flujosDeCaja[index].toInt()),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
                                       ),
                                       IconButton(
                                         onPressed: () {
@@ -502,7 +590,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     child: TextField(
-                      //controller: p,
+                      controller: van,
                       inputFormatters: [
                         CurrencyTextInputFormatter(
                             locale: 'es-Co', symbol: '', decimalDigits: 2),
@@ -510,7 +598,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       enabled: false,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        //helperText: incg1,
+                        helperText: incg3,
                         helperStyle: TextStyle(
                           color: Colors.red.shade900,
                           fontWeight: FontWeight.bold,
@@ -539,7 +627,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.44,
                     child: TextField(
-                      //controller: f,
+                      controller: tir,
                       inputFormatters: [
                         CurrencyTextInputFormatter(
                             locale: 'es-Co', symbol: '', decimalDigits: 2),
@@ -547,7 +635,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       enabled: false,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        //helperText: incg2,
+                        helperText: incg4,
                         helperStyle: TextStyle(
                           color: Colors.red.shade900,
                           fontWeight: FontWeight.bold,
@@ -588,7 +676,11 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           setState(() {
                             _isSwitched = !_isSwitched;
                             if (_isSwitched != false) {
-                            } else {}
+                              calcularTasaInternaDeRetorno();
+                              graficar();
+                            } else {
+                              nuevaOperacion();
+                            }
                           });
                         },
                         child: _isSwitched != false
