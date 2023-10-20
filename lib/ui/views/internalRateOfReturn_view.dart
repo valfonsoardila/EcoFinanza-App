@@ -1,4 +1,6 @@
+import 'package:ecofinanza_app/ui/models/internalRateReturn_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -13,6 +15,62 @@ class InternalRateOfReturnView extends StatefulWidget {
 class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
   List<_StepAreaData>? chartData;
   List<Color> gradientColors = [Colors.green, Colors.yellow];
+  bool _isSwitched = false;
+  String incg1 = "";
+  String incg2 = "";
+  TextEditingController inver = TextEditingController();
+  TextEditingController inter = TextEditingController();
+  late InternalRateReturnModel intrr;
+  List<dynamic> flujosDeCaja = [];
+  int indexSelected1 = 0;
+  String TiempoSeleccionadoDropd1 = 'Mensual';
+  int indexSelected2 = 0;
+  String TiempoSeleccionadoDropd2 = 'Mensual';
+  //Lista de tiempos
+  var Tiempos = <String>[
+    'Diario',
+    'Mensual',
+    'Bimestral',
+    'Trimestral',
+    'Semestral',
+    'Anual'
+  ];
+  //Funciones
+  void addRow() {
+    setState(() {
+      flujosDeCaja.add(0);
+    });
+  }
+
+  String FormatoMoneda(double numero) {
+    NumberFormat f = NumberFormat("#,###.00#", "es_COP");
+    String result = f.format(numero);
+    return result;
+  }
+
+  String FormatoMoneda2(int numero) {
+    NumberFormat f = NumberFormat("#,###.00#", "es_COP");
+    String result = f.format(numero);
+    return result;
+  }
+
+  String textoFormato(double n) {
+    double i = n;
+    String s = i.toStringAsFixed(2).split(".")[1];
+    int h = int.parse(s);
+    if (h == 0) {
+      return i.toStringAsFixed(2).split(".")[0];
+    } else {
+      return i.toString();
+    }
+  }
+
+  calcularTasaInternaDeRetorno() {
+    intrr.inver =
+        double.parse(inver.text.replaceAll('.', '').replaceAll(',', '.'));
+    intrr.inter =
+        double.parse(inter.text.replaceAll('.', '').replaceAll(',', '.'));
+  }
 
   @override
   void initState() {
@@ -108,6 +166,471 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                 child: const Text(
                   "Datos",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      child: TextField(
+                        //controller: p,
+                        inputFormatters: [
+                          CurrencyTextInputFormatter(
+                              locale: 'es-Co', symbol: '', decimalDigits: 2),
+                        ],
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          helperText: incg1,
+                          helperStyle: TextStyle(
+                            color: Colors.red.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          filled:
+                              true, // Esta propiedad indica que el fondo debe estar lleno.
+                          fillColor: Color.fromARGB(255, 248, 246, 247),
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(Icons.attach_money),
+                          labelText: 'Inversion inicial',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 248, 246, 247),
+                        border: Border.all(
+                          color: Colors.grey
+                              .shade500, // Puedes cambiar el color del borde aquí
+                          width: 1.0, // Puedes ajustar el grosor del borde aquí
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Puedes ajustar la esquina redondeada aquí
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(Icons.timer),
+                          ),
+                          Expanded(
+                            child: DropdownButton(
+                              hint: Text(
+                                'Tiempo',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              dropdownColor: Colors.white.withOpacity(0.9),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.black,
+                              ),
+                              iconSize: 36,
+                              isExpanded: true,
+                              underline: SizedBox(),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              value: TiempoSeleccionadoDropd2,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  TiempoSeleccionadoDropd2 =
+                                      newValue.toString();
+                                  indexSelected2 =
+                                      Tiempos.indexOf(newValue.toString());
+                                  print(
+                                      indexSelected2); // Actualiza el valor seleccionado
+                                });
+                              },
+                              items: Tiempos.map((valueItem) {
+                                return DropdownMenuItem(
+                                  value: valueItem,
+                                  child: Text(valueItem),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      child: TextField(
+                        //controller: f,
+                        inputFormatters: [
+                          CurrencyTextInputFormatter(
+                              locale: 'es-Co', symbol: '', decimalDigits: 2),
+                        ],
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          helperText: incg2,
+                          helperStyle: TextStyle(
+                            color: Colors.red.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          filled:
+                              true, // Esta propiedad indica que el fondo debe estar lleno.
+                          fillColor: Color.fromARGB(255, 248, 246, 247),
+
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(Icons.percent_rounded),
+                          labelText: 'Interes',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 248, 246, 247),
+                        border: Border.all(
+                          color: Colors.grey
+                              .shade500, // Puedes cambiar el color del borde aquí
+                          width: 1.0, // Puedes ajustar el grosor del borde aquí
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Puedes ajustar la esquina redondeada aquí
+                      ),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Icon(Icons.timer),
+                          ),
+                          Expanded(
+                            child: DropdownButton(
+                              hint: Text(
+                                'Tiempo',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              dropdownColor: Colors.white.withOpacity(0.9),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.black,
+                              ),
+                              iconSize: 36,
+                              isExpanded: true,
+                              underline: SizedBox(),
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              value: TiempoSeleccionadoDropd2,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  TiempoSeleccionadoDropd2 =
+                                      newValue.toString();
+                                  indexSelected2 =
+                                      Tiempos.indexOf(newValue.toString());
+                                  print(
+                                      indexSelected2); // Actualiza el valor seleccionado
+                                });
+                              },
+                              items: Tiempos.map((valueItem) {
+                                return DropdownMenuItem(
+                                  value: valueItem,
+                                  child: Text(valueItem),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                width: MediaQuery.of(context).size.width * 0.95,
+                height: 220,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Flujo de caja',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                addRow();
+                              },
+                              icon: Icon(Icons.add_box_outlined),
+                              iconSize: 20,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        child: Expanded(
+                            child: ListView.builder(
+                                itemCount: flujosDeCaja.length,
+                                itemBuilder: (context, index) {
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('${index + 1}',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black)),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: TextField(
+                                          //controller: p,
+                                          inputFormatters: [
+                                            CurrencyTextInputFormatter(
+                                                locale: 'es-Co',
+                                                symbol: '',
+                                                decimalDigits: 2),
+                                          ],
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            //helperText: incg1,
+                                            helperStyle: TextStyle(
+                                              color: Colors.red.shade900,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            filled: true,
+                                            fillColor: Color.fromARGB(
+                                                255, 248, 246, 247),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              borderSide: const BorderSide(
+                                                color: Colors.black,
+                                                width: 1.0,
+                                              ),
+                                            ),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            prefixIcon:
+                                                const Icon(Icons.attach_money),
+                                            labelText: 'Monto',
+                                            labelStyle: const TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            flujosDeCaja.removeAt(index);
+                                          });
+                                        },
+                                        icon: Icon(Icons.delete),
+                                        iconSize: 20,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  );
+                                })),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                  child: Row(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.44,
+                    child: TextField(
+                      //controller: p,
+                      inputFormatters: [
+                        CurrencyTextInputFormatter(
+                            locale: 'es-Co', symbol: '', decimalDigits: 2),
+                      ],
+                      enabled: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        //helperText: incg1,
+                        helperStyle: TextStyle(
+                          color: Colors.red.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        filled:
+                            true, // Esta propiedad indica que el fondo debe estar lleno.
+                        fillColor: Color.fromARGB(255, 248, 246, 247),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: const Icon(Icons.attach_money),
+                        labelText: 'VAN (Valor Actual Neto)',
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.44,
+                    child: TextField(
+                      //controller: f,
+                      inputFormatters: [
+                        CurrencyTextInputFormatter(
+                            locale: 'es-Co', symbol: '', decimalDigits: 2),
+                      ],
+                      enabled: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        //helperText: incg2,
+                        helperStyle: TextStyle(
+                          color: Colors.red.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        filled:
+                            true, // Esta propiedad indica que el fondo debe estar lleno.
+                        fillColor: Color.fromARGB(255, 248, 246, 247),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: const Icon(Icons.attach_money),
+                        labelText: 'TIR (Tasa Interna de Retorno)',
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _isSwitched = !_isSwitched;
+                            if (_isSwitched != false) {
+                            } else {}
+                          });
+                        },
+                        child: _isSwitched != false
+                            ? const Text("Nuevo")
+                            : const Text("Calcular"),
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all<Size>(
+                              const Size(160, 40)),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.deepPurple),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    _isSwitched != false
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Recalcular"),
+                              style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                    const Size(160, 40)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.deepPurple),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ],
                 ),
               ),
             ],

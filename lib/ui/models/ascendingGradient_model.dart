@@ -102,17 +102,23 @@ class AscendingGradientModel {
 
   void criterio2() {
     if ((p == 0) && (f != 0 && i != 0 && n != 0 && g != 0 && a != 0)) {
+      print("Llego a p");
       calcularP();
     } else if ((g == 0) && (p != 0 && i != 0 && n != 0 && a != 0)) {
       calcularPg();
+      print("Pg: $g");
     } else if ((a == 0) && (p != 0 && i != 0 && n != 0 && g != 0)) {
       calcularPa();
+      print("Pa: $a");
     } else if ((f == 0) && (p != 0 && i != 0 && n != 0 && g != 0 && a != 0)) {
       calcularF();
+      print("F: $f");
     } else if ((g == 0) && (f != 0 && i != 0 && n != 0 && a != 0)) {
       calcularFg();
+      print("Fg: $g");
     } else if ((a == 0) && (f != 0 && i != 0 && n != 0 && g != 0)) {
       calcularFa();
+      print("Fa: $a");
     } else {
       //print("No se pueden tener 2 incognitas");
     }

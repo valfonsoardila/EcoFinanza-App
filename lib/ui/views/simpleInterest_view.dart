@@ -348,6 +348,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                   color: Colors.red.shade900,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                filled:
+                                    true, // Esta propiedad indica que el fondo debe estar lleno.
+                                fillColor: Color.fromARGB(255, 248, 246, 247),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: const BorderSide(
@@ -383,6 +386,9 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                   color: Colors.red.shade900,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                filled:
+                                    true, // Esta propiedad indica que el fondo debe estar lleno.
+                                fillColor: Color.fromARGB(255, 248, 246, 247),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: const BorderSide(
