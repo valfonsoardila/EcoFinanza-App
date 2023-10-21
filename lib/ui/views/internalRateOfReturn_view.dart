@@ -191,6 +191,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height * 1.1,
           decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/imgs/bg.jpg"),
@@ -199,7 +200,6 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -585,84 +585,85 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                 ),
               ),
               Container(
-                  child: Row(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    child: TextField(
-                      controller: van,
-                      inputFormatters: [
-                        CurrencyTextInputFormatter(
-                            locale: 'es-Co', symbol: '', decimalDigits: 2),
-                      ],
-                      enabled: false,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        helperText: incg3,
-                        helperStyle: TextStyle(
-                          color: Colors.red.shade900,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        filled:
-                            true, // Esta propiedad indica que el fondo debe estar lleno.
-                        fillColor: Color.fromARGB(255, 248, 246, 247),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Colors.black,
-                            width: 1.0,
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      child: TextField(
+                        controller: van,
+                        inputFormatters: [
+                          CurrencyTextInputFormatter(
+                              locale: 'es-Co', symbol: '', decimalDigits: 2),
+                        ],
+                        enabled: false,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          helperText: incg3,
+                          helperStyle: TextStyle(
+                            color: Colors.red.shade900,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        prefixIcon: const Icon(Icons.attach_money),
-                        labelText: 'VAN (Valor Actual Neto)',
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
+                          filled:
+                              true, // Esta propiedad indica que el fondo debe estar lleno.
+                          fillColor: Color.fromARGB(255, 248, 246, 247),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(Icons.attach_money),
+                          labelText: 'VAN (Valor Actual Neto)',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.44,
-                    child: TextField(
-                      controller: tir,
-                      inputFormatters: [
-                        CurrencyTextInputFormatter(
-                            locale: 'es-Co', symbol: '', decimalDigits: 2),
-                      ],
-                      enabled: false,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        helperText: incg4,
-                        helperStyle: TextStyle(
-                          color: Colors.red.shade900,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        filled:
-                            true, // Esta propiedad indica que el fondo debe estar lleno.
-                        fillColor: Color.fromARGB(255, 248, 246, 247),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: Colors.black,
-                            width: 1.0,
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.44,
+                      child: TextField(
+                        controller: tir,
+                        inputFormatters: [
+                          CurrencyTextInputFormatter(
+                              locale: 'es-Co', symbol: '', decimalDigits: 2),
+                        ],
+                        enabled: false,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          helperText: incg4,
+                          helperStyle: TextStyle(
+                            color: Colors.red.shade900,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        prefixIcon: const Icon(Icons.attach_money),
-                        labelText: 'TIR (Tasa Interna de Retorno)',
-                        labelStyle: const TextStyle(
-                          color: Colors.black,
+                          filled:
+                              true, // Esta propiedad indica que el fondo debe estar lleno.
+                          fillColor: Color.fromARGB(255, 248, 246, 247),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          prefixIcon: const Icon(Icons.attach_money),
+                          labelText: 'TIR (Tasa Interna de Retorno)',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              )),
+                  ],
+                ),
+              ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Row(

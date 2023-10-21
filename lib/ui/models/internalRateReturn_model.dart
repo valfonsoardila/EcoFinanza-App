@@ -42,7 +42,6 @@ class InternalRateReturnModel {
       }
 
       if (npv.abs() < tolerance) {
-        print("Tir: " + tir.toString());
         return tir * 100; // Devuelve la TIR en porcentaje
       }
 
@@ -52,7 +51,6 @@ class InternalRateReturnModel {
         right = tir;
       }
     }
-    print("No converge");
     return double.infinity; // Si no converge, devuelve infinito
   }
 
@@ -63,7 +61,6 @@ class InternalRateReturnModel {
       van += flujos[i] /
           pow(1 + inter / 100, i + 1); // Convierte la tasa a porcentaje
     }
-    print("VAN: " + van.toString());
     return van;
   }
 
