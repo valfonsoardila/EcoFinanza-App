@@ -1,17 +1,19 @@
 import 'dart:math';
 
 class InternalRateReturnModel {
-  late double inver;
-  late double inter;
+  late double inversion;
+  late double interes;
   late double tir;
   late double van;
   late int nTiempo;
+  late int iteraciones;
   late List<double> flujos;
   late int iTiempo;
 
   InternalRateReturnModel(
-      {this.inver = 0,
-      this.inter = 0,
+      {this.inversion = 0,
+      this.interes = 0,
+      this.iteraciones = 1000,
       this.iTiempo = 0,
       this.nTiempo = 0,
       this.flujos = const [],
@@ -20,9 +22,9 @@ class InternalRateReturnModel {
 
   void todecimal(int num) {
     if (num == 0) {
-      inter = inter / 100;
+      interes = interes / 100;
     } else {
-      inter = inter * 100;
+      interes = interes * 100;
     }
   }
 
@@ -32,8 +34,8 @@ class InternalRateReturnModel {
     double tolerance = 1e-9; // Tolerancia para la precisión
     double tir;
 
-    for (int i = 0; i < 1000; i++) {
-      // Itera un máximo de 1000 veces
+    for (int i = 0; i < iteraciones; i++) {
+      // Itera un máximo de 100000 veces
       tir = (left + right) / 2; // Toma el punto medio
       double npv = 0;
 
@@ -55,23 +57,31 @@ class InternalRateReturnModel {
   }
 
   double calcularVAN() {
+    //fujos=[-inversion,flujo1,flujo2,flujo3,flujo4...]
+    // print("Flujos: $flujos");
+    // print("Inversion: $inversion");
+    // print("Interes: $interes");
     double van = 0;
-
     for (int i = 0; i < flujos.length; i++) {
-      van += flujos[i] /
-          pow(1 + inter / 100, i + 1); // Convierte la tasa a porcentaje
+      print("Flujo: ${flujos[i]}");
+      van += flujos[i] / pow(1 + interes, i);
+      print("VAN: $van");
     }
+    // van = van - inversion;
+    // print("VAN: $van");
     return van;
   }
 
   void calcularTir() {
     todecimal(0);
     tir = calcularTIRNewtonRaphson();
+    todecimal(1);
   }
 
   void calcularVan() {
     todecimal(0);
     van = calcularVAN();
+    todecimal(1);
   }
 
   void criterio() {
@@ -84,18 +94,21 @@ class InternalRateReturnModel {
   }
 
   void criterioIncognita() {
-    if ((tir == 0) && (flujos != [] && inver != 0)) {
+    if (flujos != [] && inversion != 0 && interes == 0) {
+      print("En el criterio de incognita vino a calcular TIR");
       calcularTir();
-    } else if ((van == 0) && (flujos != [] && inver != 0 && inter != 0)) {
+    } else if (flujos != [] && inversion != 0 && interes != 0) {
+      print("En el criterio de incognita vino a calcular VAN");
+      calcularTir();
       calcularVan();
     }
   }
 
   void conversion() {
-    if (inter == 0) {
-      inter = 0.1;
+    if (interes == 0) {
+      interes = interes / 100;
     } else {
-      inter = inter / 100;
+      interes = interes * 100;
     }
   }
 }

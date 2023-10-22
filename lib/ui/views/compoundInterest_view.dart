@@ -297,7 +297,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                           dataSource: data,
                           xValueMapper: (dynamic data, _) => data.x,
                           yValueMapper: (dynamic data, _) => data.y,
-                          name: 'Gold',
+                          name: 'Cuoatas de pago',
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,

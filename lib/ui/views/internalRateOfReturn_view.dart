@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InternalRateOfReturnView extends StatefulWidget {
   const InternalRateOfReturnView({super.key});
@@ -20,8 +21,8 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
   String incg2 = "";
   String incg3 = "";
   String incg4 = "";
-  TextEditingController inver = TextEditingController();
-  TextEditingController inter = TextEditingController();
+  TextEditingController inversion = TextEditingController();
+  TextEditingController interes = TextEditingController();
   TextEditingController flujo = TextEditingController();
   TextEditingController tir = TextEditingController();
   TextEditingController van = TextEditingController();
@@ -30,6 +31,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
   int indexSelected1 = 0;
   String TiempoSeleccionadoDropd1 = 'Mensual';
   int indexSelected2 = 0;
+  int iteraciones = 0;
   String TiempoSeleccionadoDropd2 = 'Mensual';
   //Lista de tiempos
   var Tiempos = <String>[
@@ -74,8 +76,10 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
     setState(() {
       // Verifica si flujosDeCaja está vacío, si lo está, agrega la inversión inicial
       if (flujosDeCaja.isEmpty) {
-        flujosDeCaja.add(
-            double.parse(inver.text.replaceAll('.', '').replaceAll(',', '.')));
+        double inversionInicial = double.parse(
+                inversion.text.replaceAll('.', '').replaceAll(',', '.')) *
+            -1;
+        flujosDeCaja.add(inversionInicial);
       }
       // Luego agrega el nuevo flujo ingresado en el campo de texto
       flujosDeCaja.add(
@@ -84,32 +88,39 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
     });
   }
 
+  obtenerIteraciones() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    iteraciones = prefs.getInt('iteraciones') ?? 1000;
+  }
+
   calcularTasaInternaDeRetorno() {
     obtenerIncognita();
-    intrr.inver =
-        double.parse(inver.text.replaceAll('.', '').replaceAll(',', '.'));
-    intrr.inter =
-        double.parse(inter.text.replaceAll('.', '').replaceAll(',', '.'));
+    intrr.inversion =
+        double.parse(inversion.text.replaceAll('.', '').replaceAll(',', '.'));
+    intrr.interes =
+        double.parse(interes.text.replaceAll('.', '').replaceAll(',', '.'));
     intrr.iTiempo = indexSelected1;
     intrr.iTiempo = indexSelected2;
     intrr.flujos = flujosDeCaja;
+    print("Iteraciones: $iteraciones");
+    intrr.iteraciones = iteraciones;
     intrr.criterio();
-    inver.text = FormatoMoneda(intrr.inver);
+    inversion.text = FormatoMoneda(intrr.inversion);
     tir.text = FormatoMoneda(intrr.tir);
     van.text = FormatoMoneda(intrr.van);
   }
 
   obtenerIncognita() {
-    if (inver.text == "") {
-      inver.text = "0";
+    if (inversion.text == "") {
+      inversion.text = "0";
       setState(() {
         incg1 = "Incognita";
         incg2 = "";
         incg3 = "";
         incg4 = "";
       });
-    } else if (inter.text == "") {
-      inter.text = "0";
+    } else if (interes.text == "") {
+      interes.text = "0";
       setState(() {
         incg1 = "";
         incg2 = "Incognita";
@@ -142,8 +153,8 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
 
   nuevaOperacion() {
     setState(() {
-      inver.text = "";
-      inter.text = "";
+      inversion.text = "";
+      interes.text = "";
       tir.text = "";
       van.text = "";
       flujosDeCaja.clear();
@@ -161,6 +172,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
 
   @override
   void initState() {
+    obtenerIteraciones();
     intrr = InternalRateReturnModel();
     super.initState();
     //chartData  tendra valores iniciales en 0 para que no se vea vacio
@@ -264,7 +276,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       margin: const EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
-                        controller: inver,
+                        controller: inversion,
                         inputFormatters: [
                           CurrencyTextInputFormatter(
                               locale: 'es-Co', symbol: '', decimalDigits: 2),
@@ -369,7 +381,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       margin: const EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
-                        controller: inter,
+                        controller: interes,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           helperText: incg2,
@@ -534,7 +546,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                             ),
                             IconButton(
                               onPressed: () {
-                                //la primera posicion será el valor de inver
+                                //la primera posicion será el valor de inversion
                                 agregarFlujo();
                               },
                               icon: Icon(Icons.add_box_outlined),

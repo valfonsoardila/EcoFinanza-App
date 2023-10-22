@@ -297,7 +297,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                           dataSource: data,
                           xValueMapper: (dynamic data, _) => data.x,
                           yValueMapper: (dynamic data, _) => data.y,
-                          name: 'Gold',
+                          name: 'Cuotas de pago',
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
