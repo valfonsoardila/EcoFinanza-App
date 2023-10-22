@@ -6,10 +6,11 @@ class CompoundInterestModel {
   late double n;
   late double i;
   late double k;
+  late int valorAnual = 360;
   late int nTiempo;
   late int iTiempo;
   late bool modo = true;
-  List<List<double>> matrix = [
+  List<List<double>> matrix360 = [
     [1, 30, 60, 90, 180, 360],
     [0.03333333333333330, 1, 2.00, 3.00, 6.00, 12.00],
     [0.01666666666666670, 0.50, 1, 1.50, 3.00, 6.00],
@@ -38,6 +39,50 @@ class CompoundInterestModel {
       1
     ],
   ];
+  List<List<double>> matrix365 = [
+    [1, 30, 60, 90, 180, 365],
+    [
+      0.00273972603,
+      0.08219178082,
+      0.16438356164,
+      0.24657534247,
+      0.49315068493,
+      1
+    ],
+    [
+      0.00547945205,
+      0.16438356164,
+      0.32876712329,
+      0.49315068493,
+      0.98630136986,
+      2
+    ],
+    [
+      0.00821917808,
+      0.24657534247,
+      0.49315068493,
+      0.73972602740,
+      1.47945205479,
+      3
+    ],
+    [
+      0.01643835616,
+      0.49315068493,
+      0.98630136986,
+      1.47945205479,
+      2.95890410959,
+      6
+    ],
+    [
+      0.03287671232,
+      0.98630136986,
+      1.97260273973,
+      2.95890410959,
+      5.91780821918,
+      12
+    ],
+  ];
+
   CompoundInterestModel(
       {this.p = 0,
       this.f = 0,
@@ -110,12 +155,20 @@ class CompoundInterestModel {
   }
 
   void conversion() {
-    i = i * matrix[iTiempo][nTiempo];
+    if (valorAnual == valorAnual) {
+      i = i * matrix360[iTiempo][nTiempo];
+    } else {
+      i = i * matrix365[iTiempo][nTiempo];
+    }
     //   2          1
   }
 
   void inversion() {
-    i = i * matrix[nTiempo][iTiempo];
+    if (valorAnual == 360) {
+      i = i / matrix360[iTiempo][nTiempo];
+    } else {
+      i = i / matrix365[iTiempo][nTiempo];
+    }
     //   2          1
   }
 }

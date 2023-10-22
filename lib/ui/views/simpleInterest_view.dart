@@ -2,6 +2,7 @@ import 'package:ecofinanza_app/ui/models/simpleInterest_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SimpleInterestView extends StatefulWidget {
@@ -42,6 +43,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   double max = 1000;
   List<double> cuotas = [];
   int diasTotales = 0;
+  int valorAnual = 0;
   List<String> Meses = [
     'Ene',
     'Feb',
@@ -98,6 +100,13 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     }
   }
 
+  obtenerValorAnual() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      valorAnual = prefs.getInt('year') ?? 360;
+    });
+  }
+
   calcularInteresSimple() {
     obtenerIncognita();
     ins.p = double.parse(p.text.replaceAll('.', '').replaceAll(',', '.'));
@@ -105,6 +114,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
     ins.n = double.parse(n.text);
     ins.i = double.parse(i.text);
     ins.iTiempo = indexSelected2;
+    ins.valorAnual = valorAnual;
     ins.criterio();
     p.text = FormatoMoneda(ins.p);
     f.text = FormatoMoneda(ins.f);
@@ -222,6 +232,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
   @override
   void initState() {
     super.initState();
+    obtenerValorAnual();
     ins = SimpleInterestModel(p: 0, f: 0, i: 0, n: 0, iTiempo: 1, nTiempo: 1);
     data = [
       _ChartData('Ene', 0),
@@ -314,10 +325,18 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: const Row(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Datos",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "Valor anual: $valorAnual",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,

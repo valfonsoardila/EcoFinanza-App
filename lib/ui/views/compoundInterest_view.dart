@@ -2,6 +2,7 @@ import 'package:ecofinanza_app/ui/models/compoundInterest_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CompoundInterestView extends StatefulWidget {
@@ -38,10 +39,10 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   double interestValue = 0;
   double nInterest = 0;
   String nCuota = "";
-//  double _height = 60;
   double min = 0;
   double max = 1000;
   int diasTotales = 0;
+  int valorAnual = 0;
   List<double> cuotas = [];
   List<String> Meses = [
     'Ene',
@@ -97,6 +98,13 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
     } else {
       return i.toString();
     }
+  }
+
+  obtenerValorAnual() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      valorAnual = prefs.getInt('year') ?? 360;
+    });
   }
 
   calcularInteresCompuesto() {
@@ -223,6 +231,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
   @override
   void initState() {
     super.initState();
+    obtenerValorAnual();
     inc = CompoundInterestModel(p: 0, f: 0, i: 0, n: 0, iTiempo: 1, nTiempo: 1);
     data = [
       _ChartData('Ene', 0),
