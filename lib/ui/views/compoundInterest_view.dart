@@ -324,6 +324,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 5),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Datos",
