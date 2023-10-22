@@ -331,6 +331,13 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          Text(
+                            "Valor anual: $valorAnual",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           )
                         ],
                       ),

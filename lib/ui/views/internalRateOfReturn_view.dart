@@ -253,7 +253,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       color: Color.fromRGBO(75, 135, 185, 0.6),
                       borderColor: Color.fromRGBO(75, 135, 185, 1),
                       borderWidth: 2,
-                      name: 'High',
+                      name: 'Cuotas',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.high,
                     ),
@@ -262,7 +262,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       borderColor: Color.fromRGBO(192, 108, 132, 1),
                       color: Color.fromRGBO(192, 108, 132, 0.6),
                       borderWidth: 2,
-                      name: 'Low',
+                      name: 'Tiempo',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.low,
                     )
