@@ -656,7 +656,7 @@ class _SimpleInterestViewState extends State<SimpleInterestView> {
                                     colors: gradientColors,
                                   ).colors[0],
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                                  fontSize: 16,
                                 ),
                                 filled:
                                     true, // Esta propiedad indica que el fondo debe estar lleno.

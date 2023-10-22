@@ -640,7 +640,7 @@ class _CompoundInterestViewState extends State<CompoundInterestView> {
                                     colors: gradientColors,
                                   ).colors[1],
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 13,
+                                  fontSize: 16,
                                 ),
                                 filled:
                                     true, // Esta propiedad indica que el fondo debe estar lleno.
