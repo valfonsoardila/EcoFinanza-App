@@ -330,7 +330,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
                       color: Color.fromRGBO(75, 135, 185, 0.6),
                       borderColor: Color.fromRGBO(75, 135, 185, 1),
                       borderWidth: 2,
-                      name: 'High',
+                      name: 'Cuotas',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.high,
                     ),
@@ -339,7 +339,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
                       borderColor: Color.fromRGBO(192, 108, 132, 1),
                       color: Color.fromRGBO(192, 108, 132, 0.6),
                       borderWidth: 2,
-                      name: 'Low',
+                      name: 'Tiempo',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.low,
                     )
@@ -494,9 +494,9 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
                             color: Colors.red.shade900,
                             fontWeight: FontWeight.bold,
                           ),
-                                                  filled:
-                            true, // Esta propiedad indica que el fondo debe estar lleno.
-                        fillColor: Color.fromARGB(255, 248, 246, 247),
+                          filled:
+                              true, // Esta propiedad indica que el fondo debe estar lleno.
+                          fillColor: Color.fromARGB(255, 248, 246, 247),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(

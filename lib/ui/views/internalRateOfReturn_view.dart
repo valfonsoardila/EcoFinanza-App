@@ -173,9 +173,15 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
   }
 
   graficar() {
+    //Quiero que grafique a TIR COMO HIGHT y a VAN como LOW
+    //Tengo que hacer un for para que recorra los flujos de caja y los vaya sumando
+    //y que los vaya guardando en una lista
+    //luego que grafique esa lista
+    List<double> lista = [];
+    double suma = 0;
     for (int i = 0; i < flujosDeCaja.length; i++) {
-      chartData!
-          .add(_StepAreaData(DateTime(2021, i + 1, 1), flujosDeCaja[i], 0));
+      suma = suma + flujosDeCaja[i];
+      lista.add(suma);
     }
   }
 
@@ -253,7 +259,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       color: Color.fromRGBO(75, 135, 185, 0.6),
                       borderColor: Color.fromRGBO(75, 135, 185, 1),
                       borderWidth: 2,
-                      name: 'High',
+                      name: 'Cuotas',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.high,
                     ),
@@ -262,7 +268,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                       borderColor: Color.fromRGBO(192, 108, 132, 1),
                       color: Color.fromRGBO(192, 108, 132, 0.6),
                       borderWidth: 2,
-                      name: 'Low',
+                      name: 'Tiempo',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
                       yValueMapper: (_StepAreaData sales, _) => sales.low,
                     )
