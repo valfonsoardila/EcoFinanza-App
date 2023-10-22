@@ -6,7 +6,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InternalRateOfReturnView extends StatefulWidget {
-  const InternalRateOfReturnView({super.key});
+  InternalRateOfReturnView({super.key});
 
   @override
   State<InternalRateOfReturnView> createState() =>
@@ -90,7 +90,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
 
   obtenerIteraciones() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    iteraciones = prefs.getInt('iteraciones') ?? 1000;
+    setState(() {
+      iteraciones = prefs.getInt('iteraciones') ?? 1000;
+    });
   }
 
   calcularTasaInternaDeRetorno() {
@@ -127,7 +129,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
         incg3 = "";
         incg4 = "";
       });
-    } else if (van.text == "") {
+    } else if (van.text == "" && tir.text != "") {
       van.text = "0";
       setState(() {
         incg1 = "";
@@ -135,12 +137,19 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
         incg3 = "Incognita";
         incg4 = "";
       });
-    } else if (tir.text == "") {
+    } else if (tir.text == "" && van.text != "") {
       tir.text = "0";
       setState(() {
         incg1 = "";
         incg2 = "";
         incg3 = "";
+        incg4 = "Incognita";
+      });
+    } else if (van.text == "" && tir.text == "") {
+      setState(() {
+        incg1 = "";
+        incg2 = "";
+        incg3 = "Incognita";
         incg4 = "Incognita";
       });
     }
@@ -204,20 +213,20 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height * 1.1,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage("assets/imgs/bg.jpg"),
               fit: BoxFit.cover,
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           width: MediaQuery.of(context).size.width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: const Text(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
                   "Tasa Interna de Retorno",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -231,18 +240,18 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   title: ChartTitle(text: 'Flujo de caja: '),
                   legend: Legend(isVisible: true),
                   primaryXAxis: DateTimeAxis(
-                      majorGridLines: const MajorGridLines(width: 0),
+                      majorGridLines: MajorGridLines(width: 0),
                       interval: 1,
                       edgeLabelPlacement: EdgeLabelPlacement.shift),
                   primaryYAxis: NumericAxis(
-                    axisLine: const AxisLine(width: 0),
-                    majorTickLines: const MajorTickLines(size: 0),
+                    axisLine: AxisLine(width: 0),
+                    majorTickLines: MajorTickLines(size: 0),
                   ),
                   series: <ChartSeries<_StepAreaData, DateTime>>[
                     StepAreaSeries<_StepAreaData, DateTime>(
                       dataSource: chartData!,
-                      color: const Color.fromRGBO(75, 135, 185, 0.6),
-                      borderColor: const Color.fromRGBO(75, 135, 185, 1),
+                      color: Color.fromRGBO(75, 135, 185, 0.6),
+                      borderColor: Color.fromRGBO(75, 135, 185, 1),
                       borderWidth: 2,
                       name: 'High',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
@@ -250,8 +259,8 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                     ),
                     StepAreaSeries<_StepAreaData, DateTime>(
                       dataSource: chartData!,
-                      borderColor: const Color.fromRGBO(192, 108, 132, 1),
-                      color: const Color.fromRGBO(192, 108, 132, 0.6),
+                      borderColor: Color.fromRGBO(192, 108, 132, 1),
+                      color: Color.fromRGBO(192, 108, 132, 0.6),
                       borderWidth: 2,
                       name: 'Low',
                       xValueMapper: (_StepAreaData sales, _) => sales.x,
@@ -261,11 +270,21 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 10),
                 alignment: Alignment.centerLeft,
-                child: const Text(
-                  "Datos",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Datos",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Iteraciones: $iteraciones',
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -273,7 +292,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
                         controller: inversion,
@@ -294,7 +313,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
 
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.black,
                               width: 1.0,
                             ),
@@ -302,9 +321,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: const Icon(Icons.attach_money),
+                          prefixIcon: Icon(Icons.attach_money),
                           labelText: 'Inversion inicial',
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -378,7 +397,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width * 0.44,
                       child: TextField(
                         controller: interes,
@@ -395,7 +414,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
 
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.black,
                               width: 1.0,
                             ),
@@ -403,9 +422,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: const Icon(Icons.percent_rounded),
+                          prefixIcon: Icon(Icons.percent_rounded),
                           labelText: 'Interes',
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -475,13 +494,13 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: EdgeInsets.symmetric(vertical: 10),
                 width: MediaQuery.of(context).size.width * 0.95,
                 height: 220,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 5,
@@ -490,12 +509,12 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                   ],
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        padding: EdgeInsets.symmetric(vertical: 2),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -528,7 +547,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                                   fillColor: Color.fromARGB(255, 248, 246, 247),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                       color: Colors.black,
                                       width: 1.0,
                                     ),
@@ -536,9 +555,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  prefixIcon: const Icon(Icons.attach_money),
+                                  prefixIcon: Icon(Icons.attach_money),
                                   labelText: 'Monto',
-                                  labelStyle: const TextStyle(
+                                  labelStyle: TextStyle(
                                     color: Colors.black,
                                   ),
                                 ),
@@ -620,7 +639,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           fillColor: Color.fromARGB(255, 248, 246, 247),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.black,
                               width: 1.0,
                             ),
@@ -628,9 +647,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: const Icon(Icons.attach_money),
+                          prefixIcon: Icon(Icons.attach_money),
                           labelText: 'VAN (Valor Actual Neto)',
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -657,7 +676,7 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           fillColor: Color.fromARGB(255, 248, 246, 247),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(
+                            borderSide: BorderSide(
                               color: Colors.black,
                               width: 1.0,
                             ),
@@ -665,9 +684,9 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          prefixIcon: const Icon(Icons.attach_money),
+                          prefixIcon: Icon(Icons.attach_money),
                           labelText: 'TIR (Tasa Interna de Retorno)',
-                          labelStyle: const TextStyle(
+                          labelStyle: TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -677,13 +696,13 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                margin: EdgeInsets.symmetric(vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 5),
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -697,11 +716,11 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                           });
                         },
                         child: _isSwitched != false
-                            ? const Text("Nuevo")
-                            : const Text("Calcular"),
+                            ? Text("Nuevo")
+                            : Text("Calcular"),
                         style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                              const Size(160, 40)),
+                          minimumSize:
+                              MaterialStateProperty.all<Size>(Size(160, 40)),
                           backgroundColor: MaterialStateProperty.all<Color>(
                               Colors.deepPurple),
                           shape:
@@ -715,13 +734,13 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
                     ),
                     _isSwitched != false
                         ? Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             child: ElevatedButton(
                               onPressed: () {},
-                              child: const Text("Recalcular"),
+                              child: Text("Recalcular"),
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(160, 40)),
+                                    Size(160, 40)),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.deepPurple),
