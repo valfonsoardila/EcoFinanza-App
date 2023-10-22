@@ -104,6 +104,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
         G_DES.f = 1;
         G_DES.p = 0;
         calcularGradienteDes();
+
         //datos.listData(G_DES.cuotas2);
       } else {
         G_DES.f = 0;
@@ -114,7 +115,11 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
     }
   }
 
-  calcularCuotas() {}
+  calcularCuotas() {
+    for (int i = 0; i < G_ASC.cuotas.length; i++) {
+      cuotas.add(G_ASC.cuotas[i]);
+    }
+  }
 
   calcularGradienteAsc() {
     validar();
