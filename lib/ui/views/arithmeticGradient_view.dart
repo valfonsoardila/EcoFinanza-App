@@ -231,6 +231,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
 
   nuevo() {
     cuotas.clear();
+    chartData!.clear();
     vpf.clear();
     A.clear();
     G.clear();
