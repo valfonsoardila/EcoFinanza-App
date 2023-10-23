@@ -184,7 +184,6 @@ class _InternalRateOfReturnViewState extends State<InternalRateOfReturnView> {
     obtenerIteraciones();
     intrr = InternalRateReturnModel();
     super.initState();
-    //chartData  tendra valores iniciales en 0 para que no se vea vacio
     chartData = <_StepAreaData>[
       _StepAreaData(DateTime(2021, 1, 1), 0, 0),
       _StepAreaData(DateTime(2021, 2, 1), 0, 0),

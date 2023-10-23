@@ -90,13 +90,13 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
         G_ASC.f = 1;
         G_ASC.p = 0;
         calcularGradienteAsc();
-        //datos.listData(G_ASC.cuotas);
+        calcularCuotas();
       } else {
         print("calcula futuro");
         G_ASC.p = 1;
         G_ASC.f = 0;
         calcularGradienteAsc();
-        //datos.listData(G_ASC.cuotas);
+        calcularCuotas();
       }
     } else {
       //print("calcula compuesto");
@@ -104,20 +104,13 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
         G_DES.f = 1;
         G_DES.p = 0;
         calcularGradienteDes();
-
-        //datos.listData(G_DES.cuotas2);
+        calcularCuotas();
       } else {
         G_DES.f = 0;
         G_DES.p = 1;
         calcularGradienteDes();
-        //datos.listData(G_DES.cuotas2);
+        calcularCuotas();
       }
-    }
-  }
-
-  calcularCuotas() {
-    for (int i = 0; i < G_ASC.cuotas.length; i++) {
-      cuotas.add(G_ASC.cuotas[i]);
     }
   }
 
@@ -237,7 +230,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
   }
 
   nuevo() {
-    //datos.dataCuotas.clear();
+    cuotas.clear();
     vpf.clear();
     A.clear();
     G.clear();
@@ -256,6 +249,35 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
     G_DES.f = 0;
   }
 
+  calcularCuotas() {
+    for (int i = 0; i < G_ASC.cuotas.length; i++) {
+      cuotas.add(G_ASC.cuotas[i]);
+    }
+  }
+
+  graficar() {
+    for (int i = 0; i < cuotas.length; i++) {
+      //Quiero que me grafique cada cuota en el tiempo correspondiente en el grafico segun la unidad que me de el tiempoSeleccionado2
+      print(cuotas[i]);
+      if (tiempoSeleccionado2 == "Diario") {
+        List<String> diasDelMes =
+            List.generate(30, (index) => (index + 1).toString());
+        chartData!.add(_StepAreaData(
+            DateTime(2023, 1, int.parse(diasDelMes[i])), cuotas[i], 0));
+      } else if (tiempoSeleccionado2 == "Mensual") {
+        chartData!.add(_StepAreaData(DateTime(2023, i + 1, 1), cuotas[i], 0));
+      } else if (tiempoSeleccionado2 == "Bimestral") {
+        chartData!.add(_StepAreaData(DateTime(2023, i + 1, 1), cuotas[i], 0));
+      } else if (tiempoSeleccionado2 == "Trimestral") {
+        chartData!.add(_StepAreaData(DateTime(2023, i + 1, 1), cuotas[i], 0));
+      } else if (tiempoSeleccionado2 == "Semestral") {
+        chartData!.add(_StepAreaData(DateTime(2023, i + 1, 1), cuotas[i], 0));
+      } else if (tiempoSeleccionado2 == "Anual") {
+        chartData!.add(_StepAreaData(DateTime(2023, i + 1, 1), cuotas[i], 0));
+      }
+    }
+  }
+
   @override
   void initState() {
     vpf = TextEditingController();
@@ -268,18 +290,18 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
     super.initState();
     //chartData  tendra valores iniciales en 0 para que no se vea vacio
     chartData = <_StepAreaData>[
-      _StepAreaData(DateTime(2021, 1, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 2, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 3, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 4, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 5, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 6, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 7, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 8, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 9, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 10, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 11, 1), 0, 0),
-      _StepAreaData(DateTime(2021, 12, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 1, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 2, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 3, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 4, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 5, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 6, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 7, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 8, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 9, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 10, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 11, 1), 0, 0),
+      _StepAreaData(DateTime(2023, 12, 1), 0, 0),
     ];
   }
 
@@ -822,6 +844,7 @@ class _ArithmeticGradientViewState extends State<ArithmeticGradientView> {
                             _isSwitched = !_isSwitched;
                             if (_isSwitched != false) {
                               calcularGradiente();
+                              graficar();
                             } else {
                               nuevo();
                             }
